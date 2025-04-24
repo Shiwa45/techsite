@@ -1,0 +1,896 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Course card hover effects */
+    .course-card {
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        overflow: hidden;
+    }
+    
+    .course-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+    }
+    
+    .course-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(180deg, #3b82f6, #60a5fa);
+        transition: width 0.3s ease;
+    }
+    
+    .course-card:hover::before {
+        width: 7px;
+    }
+    
+    .course-image {
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .course-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, transparent 100%);
+        z-index: 1;
+    }
+    
+    .course-card:hover .course-image img {
+        transform: scale(1.05);
+    }
+    
+    .course-image img {
+        transition: transform 0.5s ease;
+    }
+    
+    /* Course badge */
+    .course-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 2;
+        transform: rotate(5deg);
+        transition: transform 0.3s ease;
+    }
+    
+    .course-card:hover .course-badge {
+        transform: rotate(0deg) scale(1.1);
+    }
+    
+    /* Progress bar */
+    .progress-bar {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: var(--progress);
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        animation: shine 2s infinite;
+    }
+    
+    @keyframes shine {
+        0% {
+            filter: brightness(1);
+        }
+        50% {
+            filter: brightness(1.2);
+        }
+        100% {
+            filter: brightness(1);
+        }
+    }
+    
+    /* Digital counter */
+    .count-up {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+    
+    /* Glowing dots animation */
+    .glow-dot {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: rgba(59, 130, 246, 0.7);
+        box-shadow: 0 0 8px 2px rgba(59, 130, 246, 0.6);
+        opacity: 0;
+        animation: glow-fade 6s infinite;
+    }
+    
+    @keyframes glow-fade {
+        0% {
+            opacity: 0;
+        }
+        20% {
+            opacity: 1;
+        }
+        80% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    
+    /* Cyber theme form field styles */
+    .form-field {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-field label {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        transition: all 0.2s;
+        pointer-events: none;
+        color: #94a3b8;
+    }
+    
+    .form-field input:focus ~ label,
+    .form-field input:not(:placeholder-shown) ~ label,
+    .form-field textarea:focus ~ label,
+    .form-field textarea:not(:placeholder-shown) ~ label,
+    .form-field select:focus ~ label,
+    .form-field select:not(:placeholder-shown) ~ label {
+        top: -0.75rem;
+        left: 0.75rem;
+        font-size: 0.75rem;
+        padding: 0 0.25rem;
+        background-color: #1e293b;
+        color: #3b82f6;
+    }
+    
+    .cyber-input {
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        background-color: rgba(15, 23, 42, 0.8);
+    }
+    
+    .cyber-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 1px #3b82f6, 0 0 8px rgba(59, 130, 246, 0.6);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="pt-24 pb-12 bg-gray-900 relative overflow-hidden">
+    <!-- Circuit grid background -->
+    <div class="absolute inset-0 opacity-10 z-0 bg-grid"></div>
+    
+    <!-- Digital circuit lines -->
+    <div class="absolute inset-0 z-0">
+        <svg class="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="none">
+            <path class="circuit-line" d="M0,100 Q300,150 600,100 T1200,100" />
+            <path class="circuit-line" d="M0,200 Q400,250 700,200 T1200,200" />
+            <path class="circuit-line" d="M0,300 Q300,400 600,300 T1200,300" />
+            
+            <!-- Circuit nodes -->
+            <circle class="circuit-node" cx="100" cy="100" r="5" />
+            <circle class="circuit-node" cx="300" cy="200" r="5" />
+            <circle class="circuit-node" cx="500" cy="300" r="5" />
+            <circle class="circuit-node" cx="700" cy="200" r="5" />
+            <circle class="circuit-node" cx="900" cy="100" r="5" />
+        </svg>
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 text-white glitch-text" data-text="OUR COURSES">OUR COURSES</h1>
+        <p class="text-xl text-blue-400 text-center max-w-3xl mx-auto">Master in-demand skills with our industry-leading tech courses designed for today's job market.</p>
+    </div>
+</div>
+
+<!-- Courses Highlight Section -->
+<div class="py-16 bg-gray-900">
+    <div class="container mx-auto px-4">
+        <!-- Introduction -->
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="text-3xl font-bold mb-6 text-white">Advance Your Career with Expert-Led Courses</h2>
+            <p class="text-lg text-gray-300">Our comprehensive courses are designed by industry experts to provide you with practical skills and knowledge that employers are looking for. Whether you're looking to start a new career or advance in your current role, we have the right course for you.</p>
+        </div>
+        
+        <!-- Courses Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <!-- Digital Marketing Course -->
+            <div class="course-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
+                <div class="course-image h-48">
+                    <!-- Placeholder for course image -->
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                        </svg>
+                    </div>
+                    
+                    <!-- Course badge -->
+                    <div class="course-badge bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded">
+                        MOST POPULAR
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-white">Digital Marketing Mastery</h3>
+                        <span class="bg-blue-900 bg-opacity-50 text-blue-300 px-2 py-1 text-sm rounded">12 Weeks</span>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6">Comprehensive training in SEO, SEM, social media marketing, content creation, and analytics to drive business growth.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Course Completion Rate</span>
+                            <span class="text-blue-300">92%</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded overflow-hidden">
+                            <div class="progress-bar h-full rounded" style="--progress: 92%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">SEO</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Google Ads</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Social Media</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Analytics</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹14999</span>
+                        <a href="{% url 'contact' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Full Stack Development Course -->
+            <div class="course-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
+                <div class="course-image h-48">
+                    <!-- Placeholder for course image -->
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-white">Full Stack Development</h3>
+                        <span class="bg-blue-900 bg-opacity-50 text-blue-300 px-2 py-1 text-sm rounded">16 Weeks</span>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6">Master both front-end and back-end technologies to build complete web applications from scratch.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Course Completion Rate</span>
+                            <span class="text-blue-300">88%</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded overflow-hidden">
+                            <div class="progress-bar h-full rounded" style="--progress: 88%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">HTML/CSS</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">JavaScript</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">React</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Python</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Django</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹9999</span>
+                        <a href="{% url 'contact' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Science & Analytics Course -->
+            <div class="course-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
+                <div class="course-image h-48">
+                    <!-- Placeholder for course image -->
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    
+                    <!-- Course badge -->
+                    <div class="course-badge bg-green-600 text-white text-xs font-bold px-3 py-1 rounded">
+                        NEW COURSE
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-white">Data Science & Analytics</h3>
+                        <span class="bg-blue-900 bg-opacity-50 text-blue-300 px-2 py-1 text-sm rounded">14 Weeks</span>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6">Learn to analyze and interpret complex data sets to drive business decisions using cutting-edge tools and techniques.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Course Completion Rate</span>
+                            <span class="text-blue-300">85%</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded overflow-hidden">
+                            <div class="progress-bar h-full rounded" style="--progress: 85%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Python</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">SQL</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Machine Learning</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Tableau</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹11999</span>
+                        <a href="{% url 'contact' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- UI/UX Design Course -->
+            <div class="course-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
+                <div class="course-image h-48">
+                    <!-- Placeholder for course image -->
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-white">UI/UX Design Fundamentals</h3>
+                        <span class="bg-blue-900 bg-opacity-50 text-blue-300 px-2 py-1 text-sm rounded">10 Weeks</span>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6">Learn the principles of user-centered design to create intuitive, engaging, and visually appealing digital experiences.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Course Completion Rate</span>
+                            <span class="text-blue-300">94%</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded overflow-hidden">
+                            <div class="progress-bar h-full rounded" style="--progress: 94%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Figma</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Adobe XD</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">User Research</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Prototyping</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹4999</span>
+                        <a href="{% url 'contact' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cybersecurity Essentials Course -->
+            <div class="course-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
+                <div class="course-image h-48">
+                    <!-- Placeholder for course image -->
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-white">Cybersecurity Essentials</h3>
+                        <span class="bg-blue-900 bg-opacity-50 text-blue-300 px-2 py-1 text-sm rounded">12 Weeks</span>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6">Develop the skills to protect organizations from cyber threats, vulnerabilities, and attacks in today's digital landscape.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Course Completion Rate</span>
+                            <span class="text-blue-300">90%</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded overflow-hidden">
+                            <div class="progress-bar h-full rounded" style="--progress: 90%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Network Security</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Ethical Hacking</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Risk Assessment</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Incident Response</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹9999</span>
+                        <a href="{% url 'contact' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cloud Computing Course -->
+            <div class="course-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
+                <div class="course-image h-48">
+                    <!-- Placeholder for course image -->
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+                        </svg>
+                    </div>
+                    
+                    <!-- Course badge -->
+                    <div class="course-badge bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded">
+                        HIGH DEMAND
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-white">Cloud Computing & DevOps</h3>
+                        <span class="bg-blue-900 bg-opacity-50 text-blue-300 px-2 py-1 text-sm rounded">14 Weeks</span>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6">Learn to design, deploy, and manage cloud infrastructure and implement DevOps practices for continuous integration and delivery.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Course Completion Rate</span>
+                            <span class="text-blue-300">87%</span>
+                        </div>
+                        <div class="h-2 bg-gray-700 rounded overflow-hidden">
+                            <div class="progress-bar h-full rounded" style="--progress: 87%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">AWS</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Docker</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">Kubernetes</span>
+                        <span class="bg-gray-700 text-gray-300 px-2 py-1 text-xs rounded">CI/CD</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹9999</span>
+                        <a href="{% url 'contact' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section with Cyber Animation -->
+<div class="py-16 bg-gray-900 border-t border-gray-800 cyber-dots relative overflow-hidden">
+    <!-- Animated glowing dots -->
+    <div class="absolute inset-0 z-0">
+        <div class="glow-dot" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+        <div class="glow-dot" style="top: 30%; left: 20%; animation-delay: 1s;"></div>
+        <div class="glow-dot" style="top: 15%; left: 30%; animation-delay: 2s;"></div>
+        <div class="glow-dot" style="top: 60%; left: 40%; animation-delay: 3s;"></div>
+        <div class="glow-dot" style="top: 45%; left: 50%; animation-delay: 0.5s;"></div>
+        <div class="glow-dot" style="top: 70%; left: 60%; animation-delay: 1.5s;"></div>
+        <div class="glow-dot" style="top: 25%; left: 70%; animation-delay: 2.5s;"></div>
+        <div class="glow-dot" style="top: 50%; left: 80%; animation-delay: 3.5s;"></div>
+        <div class="glow-dot" style="top: 35%; left: 90%; animation-delay: 0.8s;"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-6 text-white">Why Our Courses Stand Out</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Our courses are designed with industry needs in mind, focusing on practical skills that employers value.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Stat 1 -->
+            <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700 text-center">
+                <div class="text-4xl font-bold text-blue-400 mb-2 count-up" data-count="94">0</div>
+                <p class="text-xl font-medium text-white mb-2">Completion Rate</p>
+                <p class="text-gray-400">Our students stay engaged and complete their courses at a high rate.</p>
+            </div>
+            
+            <!-- Stat 2 -->
+            <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700 text-center">
+                <div class="text-4xl font-bold text-blue-400 mb-2 count-up" data-count="89">0</div>
+                <p class="text-xl font-medium text-white mb-2">Employment Rate</p>
+                <p class="text-gray-400">Of our graduates find relevant employment within 6 months.</p>
+            </div>
+            
+            <!-- Stat 3 -->
+            <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700 text-center">
+                <div class="text-4xl font-bold text-blue-400 mb-2 count-up" data-count="15000">0</div>
+                <p class="text-xl font-medium text-white mb-2">Students Trained</p>
+                <p class="text-gray-400">Professionals have upskilled through our programs.</p>
+            </div>
+            
+            <!-- Stat 4 -->
+            <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700 text-center">
+                <div class="text-4xl font-bold text-blue-400 mb-2 count-up" data-count="42">0</div>
+                <p class="text-xl font-medium text-white mb-2">Industry Partners</p>
+                <p class="text-gray-400">Leading companies collaborate with us on curriculum and hiring.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course Format Section -->
+<div class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-6 text-white">Flexible Learning Experience</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Choose the learning format that works best for your schedule and learning style.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Format 1 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 relative overflow-hidden hover:bg-opacity-70 transition-all">
+                <!-- Circuit line decoration -->
+                <div class="absolute top-0 right-0 w-24 h-24 opacity-20">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M0,20 Q20,20 20,40 T40,60 T60,80 T80,100" fill="none" stroke="#3b82f6" stroke-width="2" />
+                        <circle cx="20" cy="40" r="3" fill="#3b82f6" />
+                        <circle cx="40" cy="60" r="3" fill="#3b82f6" />
+                        <circle cx="60" cy="80" r="3" fill="#3b82f6" />
+                    </svg>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Live Online Classes</h3>
+                    <p class="text-gray-300">Interactive sessions with instructors and peers in real-time, from anywhere in the world.</p>
+                </div>
+                
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Real-time instructor interaction
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Collaborative learning environment
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Scheduled sessions for structure
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        All sessions recorded for review
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Format 2 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 relative overflow-hidden hover:bg-opacity-70 transition-all">
+                <!-- Circuit line decoration -->
+                <div class="absolute top-0 right-0 w-24 h-24 opacity-20">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M0,20 Q20,20 20,40 T40,60 T60,80 T80,100" fill="none" stroke="#3b82f6" stroke-width="2" />
+                        <circle cx="20" cy="40" r="3" fill="#3b82f6" />
+                        <circle cx="40" cy="60" r="3" fill="#3b82f6" />
+                        <circle cx="60" cy="80" r="3" fill="#3b82f6" />
+                    </svg>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Self-Paced Learning</h3>
+                    <p class="text-gray-300">Complete the course at your own pace with on-demand access to all learning materials.</p>
+                </div>
+                
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Learn on your own schedule
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        24/7 access to course materials
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Progress tracking and reminders
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Regular check-ins with mentors
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Format 3 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 relative overflow-hidden hover:bg-opacity-70 transition-all">
+                <!-- Circuit line decoration -->
+                <div class="absolute top-0 right-0 w-24 h-24 opacity-20">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M0,20 Q20,20 20,40 T40,60 T60,80 T80,100" fill="none" stroke="#3b82f6" stroke-width="2" />
+                        <circle cx="20" cy="40" r="3" fill="#3b82f6" />
+                        <circle cx="40" cy="60" r="3" fill="#3b82f6" />
+                        <circle cx="60" cy="80" r="3" fill="#3b82f6" />
+                    </svg>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-900 bg-opacity-50 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Blended Learning</h3>
+                    <p class="text-gray-300">Combine self-paced modules with live sessions for a comprehensive learning experience.</p>
+                </div>
+                
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Best of both learning styles
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Weekly live Q&A sessions
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Self-paced theory modules
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Live practical workshops
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course Inquiry Form -->
+<div class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-8 border border-gray-700 shadow-lg">
+                <h2 class="text-2xl font-bold mb-6 text-white text-center">Request More Information</h2>
+                
+                <form method="post" action="{% url 'courses' %}" class="space-y-6">
+                    {% csrf_token %}
+                    <input type="hidden" name="course_inquiry" value="true">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Name field -->
+                        <div class="form-field">
+                            {{ inquiry_form.name }}
+                            {{ inquiry_form.name.label_tag }}
+                            {% if inquiry_form.name.errors %}
+                                <div class="text-red-500 text-xs mt-1">{{ inquiry_form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Email field -->
+                        <div class="form-field">
+                            {{ inquiry_form.email }}
+                            {{ inquiry_form.email.label_tag }}
+                            {% if inquiry_form.email.errors %}
+                                <div class="text-red-500 text-xs mt-1">{{ inquiry_form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Phone field -->
+                    <div class="form-field">
+                        {{ inquiry_form.phone }}
+                        {{ inquiry_form.phone.label_tag }}
+                        {% if inquiry_form.phone.errors %}
+                            <div class="text-red-500 text-xs mt-1">{{ inquiry_form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Course selection -->
+                    <div class="form-field">
+                        <select id="course_name" name="course_name" class="w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent" placeholder=" " required>
+                            <option value="" disabled selected></option>
+                            <option value="digital_marketing">Digital Marketing Mastery</option>
+                            <option value="full_stack">Full Stack Development</option>
+                            <option value="data_science">Data Science & Analytics</option>
+                            <option value="ui_ux">UI/UX Design Fundamentals</option>
+                            <option value="cybersecurity">Cybersecurity Essentials</option>
+                            <option value="cloud_computing">Cloud Computing & DevOps</option>
+                        </select>
+                        <label for="course_name" class="text-gray-400">Course of Interest</label>
+                    </div>
+                    
+                    <!-- Message field -->
+                    <div class="form-field">
+                        {{ inquiry_form.message }}
+                        {{ inquiry_form.message.label_tag }}
+                        {% if inquiry_form.message.errors %}
+                            <div class="text-red-500 text-xs mt-1">{{ inquiry_form.message.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Newsletter signup -->
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            {{ inquiry_form.newsletter }}
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="{{ inquiry_form.newsletter.id_for_label }}" class="text-gray-300">Subscribe to our newsletter for course updates and tech insights</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit button -->
+                    <div class="pt-2 text-center">
+                        <button type="submit" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md transition-all submit-btn">
+                            Request Information
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-white">Frequently Asked Questions</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <!-- FAQ Item 1 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+                <h3 class="text-xl font-semibold mb-3 text-blue-400">What prerequisites are required for the courses?</h3>
+                <p class="text-gray-300">Most of our beginner courses don't require specific technical prerequisites. For advanced courses, we recommend basic knowledge in the relevant field. Each course page lists specific requirements, and we offer preparatory materials if needed.</p>
+            </div>
+            
+            <!-- FAQ Item 2 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+                <h3 class="text-xl font-semibold mb-3 text-blue-400">Do you offer job placement assistance?</h3>
+                <p class="text-gray-300">Yes, we provide career services including resume reviews, interview preparation, and connections to our network of hiring partners. Our career coaches work with you to help navigate your job search effectively.</p>
+            </div>
+            
+            <!-- FAQ Item 3 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+                <h3 class="text-xl font-semibold mb-3 text-blue-400">Are there financing options available?</h3>
+                <p class="text-gray-300">We offer multiple payment options including installment plans and scholarships for eligible students. We also partner with financing providers who offer education loans with flexible repayment terms.</p>
+            </div>
+            
+            <!-- FAQ Item 4 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+                <h3 class="text-xl font-semibold mb-3 text-blue-400">What kind of support is available during the course?</h3>
+                <p class="text-gray-300">Students receive comprehensive support including access to instructors, teaching assistants, peer community forums, and technical support. We also offer one-on-one mentoring sessions to address individual learning needs.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+{% include 'includes/cta_section.html' with cta_title="Ready to Advance Your Career?" cta_description="Enroll in one of our industry-leading courses today and take the first step towards a brighter future." cta_primary_text="Enroll Now" cta_secondary_text="Request Information" %}
+
+<!-- JavaScript for animations -->
+<script>
+    // Counter animation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Count up animation
+        const countElements = document.querySelectorAll('.count-up');
+        
+        const animateCount = (el, target) => {
+            let count = 0;
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16); // 60fps approx
+            
+            const timer = setInterval(() => {
+                count += increment;
+                
+                // Format numbers with commas
+                el.textContent = Math.floor(count).toLocaleString();
+                
+                if (count >= target) {
+                    el.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                }
+            }, 16);
+        };
+        
+        // Intersection Observer for animation trigger
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(entry.target.getAttribute('data-count'));
+                    animateCount(entry.target, target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        countElements.forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Form field animation
+        const formFields = document.querySelectorAll('.form-field input, .form-field textarea, .form-field select');
+        
+        formFields.forEach(field => {
+            // Initial check for pre-filled fields
+            if (field.value !== '') {
+                field.classList.add('not-empty');
+            }
+            
+            // Add event listeners
+            field.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            field.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+                
+                if (this.value === '') {
+                    this.classList.remove('not-empty');
+                } else {
+                    this.classList.add('not-empty');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

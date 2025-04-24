@@ -1,0 +1,898 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Additional hero section styles */
+    .hero-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Hero button pulse effect */
+    .pulse-btn {
+        position: relative;
+    }
+    
+    .pulse-btn::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        animation: pulse 2s infinite;
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        }
+    }
+    
+    /* Stats counter animation */
+    .stats-counter {
+        font-feature-settings: "tnum";
+        font-variant-numeric: tabular-nums;
+    }
+    
+    /* Process timeline styles */
+    .process-timeline-container {
+        position: relative;
+    }
+    
+    .process-timeline::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 4px;
+        background: linear-gradient(to bottom, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0.2));
+        transform: translateX(-50%);
+    }
+    
+    .process-step {
+        position: relative;
+    }
+    
+    .process-step::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: rgba(59, 130, 246, 0.8);
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    }
+    
+    /* Team member card hover effects */
+    .team-card {
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .team-card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .team-card .overlay {
+        position: absolute;
+        bottom: -100%;
+        left: 0;
+        right: 0;
+        background: rgba(30, 58, 138, 0.9);
+        transition: all 0.3s ease;
+        padding: 1.5rem;
+    }
+    
+    .team-card:hover .overlay {
+        bottom: 0;
+    }
+    
+    /* Course card styles */
+    .featured-course {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .featured-course::before {
+        content: 'FEATURED';
+        position: absolute;
+        top: 20px;
+        right: -30px;
+        background: rgba(59, 130, 246, 0.9);
+        color: white;
+        padding: 5px 30px;
+        transform: rotate(45deg);
+        font-size: 0.8rem;
+        font-weight: bold;
+        z-index: 10;
+    }
+    
+    /* Animated gradient border */
+    .gradient-border {
+        position: relative;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    
+    .gradient-border::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
+        background-size: 400% 400%;
+        z-index: -1;
+        animation: gradient-animation 6s ease infinite;
+        border-radius: inherit;
+    }
+    
+    @keyframes gradient-animation {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    
+    /* FAQ accordion styles */
+    .faq-item {
+        border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .faq-question {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .faq-question:hover {
+        color: rgba(59, 130, 246, 1);
+    }
+    
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    
+    .faq-item.active .faq-answer {
+        max-height: 500px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative min-h-screen bg-gray-900 overflow-hidden">
+    <!-- Particle animation container -->
+    <div id="particles-container" class="absolute inset-0 z-0"></div>
+    
+    <!-- Grid overlay -->
+    <div class="absolute inset-0 opacity-10 z-0 bg-grid"></div>
+    
+    <!-- Digital circuit lines -->
+    <div class="absolute inset-0 z-0">
+        <svg class="w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="none">
+            <path class="circuit-line" d="M0,100 Q300,150 600,100 T1200,100" />
+            <path class="circuit-line" d="M0,200 Q400,250 700,200 T1200,200" />
+            <path class="circuit-line" d="M0,300 Q300,400 600,300 T1200,300" />
+            <path class="circuit-line" d="M100,0 Q150,300 100,600 T100,800" />
+            <path class="circuit-line" d="M300,0 Q350,300 300,600 T300,800" />
+            <path class="circuit-line" d="M500,0 Q550,400 500,600 T500,800" />
+            
+            <!-- Circuit nodes -->
+            <circle class="circuit-node" cx="100" cy="100" r="5" />
+            <circle class="circuit-node" cx="300" cy="200" r="5" />
+            <circle class="circuit-node" cx="500" cy="300" r="5" />
+            <circle class="circuit-node" cx="700" cy="200" r="5" />
+            <circle class="circuit-node" cx="900" cy="100" r="5" />
+        </svg>
+    </div>
+    
+    <!-- Main content -->
+    <div class="relative z-10 container mx-auto px-4 flex flex-col items-center justify-center min-h-screen text-center py-20">
+        <!-- Company logo/name with glitch effect -->
+        <div class="glitch-wrapper mb-8">
+            <h1 class="text-5xl font-bold text-red-500 glitch-text" data-text="Easyian">Easyian</h1>
+        </div>
+        
+        <!-- Animated typing text -->
+        <div class="h-20 mb-8">
+            <div class="text-3xl md:text-4xl font-medium text-blue-400">
+                <span id="typed-text"></span><span id="cursor" class="typing-cursor">|</span>
+            </div>
+        </div>
+        
+        <!-- Tech icon section -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-12 tech-icons">
+            <div class="tech-icon-wrapper">
+                <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 transform hover:scale-110 transition-all">
+                    <div class="icon-placeholder h-16 w-16 mx-auto mb-2 tech-icon flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                    <p class="text-blue-300">Software Dev</p>
+                </div>
+            </div>
+            <div class="tech-icon-wrapper">
+                <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 transform hover:scale-110 transition-all">
+                    <div class="icon-placeholder h-16 w-16 mx-auto mb-2 tech-icon flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-blue-300">CRM Solutions</p>
+                </div>
+            </div>
+            <div class="tech-icon-wrapper">
+                <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 transform hover:scale-110 transition-all">
+                    <div class="icon-placeholder h-16 w-16 mx-auto mb-2 tech-icon flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                    <p class="text-blue-300">HRMS</p>
+                </div>
+            </div>
+            <div class="tech-icon-wrapper">
+                <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 transform hover:scale-110 transition-all">
+                    <div class="icon-placeholder h-16 w-16 mx-auto mb-2 tech-icon flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-blue-300">API Services</p>
+                </div>
+            </div>
+            <div class="tech-icon-wrapper">
+                <div class="bg-gray-800 bg-opacity-70 rounded-lg p-4 transform hover:scale-110 transition-all">
+                    <div class="icon-placeholder h-16 w-16 mx-auto mb-2 tech-icon flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-blue-300">Autodialer</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA button with hover effect -->
+        <div class="mt-8">
+            <a href="#services" class="cyber-button pulse-btn px-8 py-4 text-xl bg-blue-600 text-white font-bold rounded hover:bg-blue-500 transition-all inline-block">
+                Explore Our Solutions
+                <span class="cyber-button-glitch"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- About Us Section (NEW) -->
+<section class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-white">About Tech Solutions</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Delivering innovative technology solutions since 2015</p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- About content -->
+            <div>
+                <h3 class="text-2xl font-semibold mb-6 text-blue-400">Your Trusted Technology Partner</h3>
+                <p class="text-gray-300 mb-6">At Tech Solutions, we specialize in developing cutting-edge technology solutions that help businesses streamline operations, increase efficiency, and drive growth. With over 8 years of industry experience, our team of experts is dedicated to delivering high-quality, customized solutions that meet your unique business needs.</p>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <p class="ml-3 text-gray-300">Expert team of developers, designers, and technology specialists</p>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <p class="ml-3 text-gray-300">Proven track record of successful projects across multiple industries</p>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <p class="ml-3 text-gray-300">Client-focused approach with emphasis on communication and satisfaction</p>
+                    </div>
+                </div>
+                
+                <a href="/about/" class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Learn More About Us</a>
+            </div>
+            
+            <!-- Stats counter -->
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
+                    <div class="text-4xl font-bold text-blue-400 mb-2 stats-counter" data-value="500">0+</div>
+                    <p class="text-gray-300">Clients Worldwide</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
+                    <div class="text-4xl font-bold text-blue-400 mb-2 stats-counter" data-value="1000">0+</div>
+                    <p class="text-gray-300">Projects Completed</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
+                    <div class="text-4xl font-bold text-blue-400 mb-2 stats-counter" data-value="50">0+</div>
+                    <p class="text-gray-300">Expert Developers</p>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
+                    <div class="text-4xl font-bold text-blue-400 mb-2 stats-counter" data-value="8">0+</div>
+                    <p class="text-gray-300">Years of Experience</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-white">Our Services</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">We provide cutting-edge technology solutions tailored to meet your business needs.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Service Card 1 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-blue">
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-blue-900 bg-opacity-30 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-white text-center">Software Development</h3>
+                    <p class="text-gray-300 text-center mb-4">Custom software solutions designed to meet your unique business requirements.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Custom applications</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Enterprise software</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Mobile applications</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="/services/software-development/" class="inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service Card 2 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-blue">
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-blue-900 bg-opacity-30 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-white text-center">CRM Solutions</h3>
+                    <p class="text-gray-300 text-center mb-4">Streamline customer relationships and boost sales with our powerful CRM systems.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Lead management</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Sales automation</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Analytics and reporting</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="/services/crm-solutions/" class="inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Service Card 3 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-blue">
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-blue-900 bg-opacity-30 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-white text-center">HRMS Solutions</h3>
+                    <p class="text-gray-300 text-center mb-4">Optimize your HR processes with our comprehensive human resource management systems.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Employee management</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Payroll automation</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mr-2 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-gray-300">Performance tracking</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                        <a href="/services/hrms-solutions/" class="inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-10">
+            <a href="/services/" class="inline-block px-8 py-3 border-2 border-blue-500 text-blue-400 hover:bg-blue-900 hover:bg-opacity-30 font-bold rounded-md transition-all">View All Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses Section (NEW) -->
+<section class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-white">Featured Courses</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Advance your skills with our industry-leading training programs.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Course Card 1 - Featured -->
+            <div class="featured-course bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 transition-all duration-300 hover:-translate-y-2">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-semibold text-white">Digital Marketing Mastery</h3>
+                        <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">Popular</span>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <svg class="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-300">12 Weeks</p>
+                    </div>
+                    <p class="text-gray-300 mb-6">Comprehensive training in SEO, SEM, social media marketing, content creation, and analytics to drive business growth.</p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">SEO</span>
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">Google Ads</span>
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">Social Media</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹14999</span>
+                        <a href="/courses/digital-marketing-mastery/" class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Course Card 2 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 transition-all duration-300 hover:-translate-y-2">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-semibold text-white">Full Stack Development</h3>
+                        <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">High Demand</span>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <svg class="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-300">16 Weeks</p>
+                    </div>
+                    <p class="text-gray-300 mb-6">Master both front-end and back-end technologies to build complete web applications from scratch.</p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">HTML/CSS</span>
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">JavaScript</span>
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">Python</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹9999</span>
+                        <a href="/courses/full-stack-development/" class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Course Card 3 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 transition-all duration-300 hover:-translate-y-2">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-semibold text-white">Data Science & Analytics</h3>
+                        <span class="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">New</span>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <svg class="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-300">14 Weeks</p>
+                    </div>
+                    <p class="text-gray-300 mb-6">Learn to analyze and interpret complex data sets to drive business decisions using cutting-edge tools and techniques.</p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">Python</span>
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">SQL</span>
+                        <span class="bg-blue-900 bg-opacity-30 text-blue-300 text-xs px-3 py-1 rounded-full">Machine Learning</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-white">₹12999</span>
+                        <a href="/courses/data-science-analytics/" class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-10">
+            <a href="/courses/" class="inline-block px-8 py-3 border-2 border-blue-500 text-blue-400 hover:bg-blue-900 hover:bg-opacity-30 font-bold rounded-md transition-all">Browse All Courses</a>
+        </div>
+    </div>
+</section>
+
+<!-- Our Process Section (NEW) -->
+<section class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4 text-white">Our Development Process</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">We follow a proven methodology to ensure successful project delivery and client satisfaction.</p>
+        </div>
+        
+        <div class="process-timeline-container relative">
+            <div class="process-timeline hidden lg:block absolute left-0 right-0"></div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Process Step 1 -->
+                <div class="process-step p-6 bg-gray-800 bg-opacity-50 rounded-lg border border-gray-700">
+                    <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full text-3xl font-bold text-blue-400">1</div>
+                    <h3 class="text-xl font-semibold mb-4 text-white text-center">Discovery & Planning</h3>
+                    <p class="text-gray-300">We start by understanding your business needs and objectives. Our team works closely with you to gather requirements, define project scope, and create a detailed roadmap.</p>
+                </div>
+                
+                <!-- Process Step 2 -->
+                <div class="process-step p-6 bg-gray-800 bg-opacity-50 rounded-lg border border-gray-700">
+                    <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full text-3xl font-bold text-blue-400">2</div>
+                    <h3 class="text-xl font-semibold mb-4 text-white text-center">Design & Development</h3>
+                    <p class="text-gray-300">Our expert team designs and develops your solution using cutting-edge technologies and best practices, with regular updates and client feedback throughout the process.</p>
+                </div>
+                
+                <!-- Process Step 3 -->
+                <div class="process-step p-6 bg-gray-800 bg-opacity-50 rounded-lg border border-gray-700">
+                    <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full text-3xl font-bold text-blue-400">3</div>
+                    <h3 class="text-xl font-semibold mb-4 text-white text-center">Testing & Deployment</h3>
+                    <p class="text-gray-300">We thoroughly test all aspects of your solution to ensure quality and performance, then deploy it with minimal disruption to your operations, followed by ongoing support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-white">What Our Clients Say</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Hear from businesses that have transformed their operations with our technology solutions.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Testimonial 1 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 relative">
+                <!-- Quote icon -->
+                <div class="absolute top-4 right-4 text-blue-400 opacity-30">
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                    </svg>
+                </div>
+                
+                <div class="relative z-10">
+                    <p class="text-gray-300 mb-6">"The custom CRM solution developed by Tech Solutions has completely transformed our sales process. We've seen a 40% increase in lead conversion since implementation."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-400 rounded-full mr-4 flex-shrink-0"></div>
+                        <div>
+                            <h4 class="text-white font-medium">Sarah Johnson</h4>
+                            <p class="text-gray-400">Sales Director, Quantum Enterprises</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 relative">
+                <!-- Quote icon -->
+                <div class="absolute top-4 right-4 text-blue-400 opacity-30">
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                    </svg>
+                </div>
+                
+                <div class="relative z-10">
+                    <p class="text-gray-300 mb-6">"The HRMS implementation was seamless and the ongoing support is exceptional. Our HR team's efficiency has improved dramatically, allowing us to focus on strategic initiatives."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-400 rounded-full mr-4 flex-shrink-0"></div>
+                        <div>
+                            <h4 class="text-white font-medium">Michael Chen</h4>
+                            <p class="text-gray-400">HR Manager, Innovate Technologies</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 3 -->
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 relative">
+                <!-- Quote icon -->
+                <div class="absolute top-4 right-4 text-blue-400 opacity-30">
+                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                    </svg>
+                </div>
+                
+                <div class="relative z-10">
+                    <p class="text-gray-300 mb-6">"The API integration services provided by Tech Solutions helped us connect our disparate systems seamlessly. Their team's technical expertise and problem-solving approach was impressive."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-400 rounded-full mr-4 flex-shrink-0"></div>
+                        <div>
+                            <h4 class="text-white font-medium">Alex Rodriguez</h4>
+                            <p class="text-gray-400">CTO, GlobalConnect Solutions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+       
+ 
+<!-- FAQ Section (NEW) -->
+<section class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-white">Frequently Asked Questions</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Find answers to common questions about our services and solutions.</p>
+        </div>
+        
+        <div class="max-w-3xl mx-auto">
+            <!-- FAQ Item 1 -->
+            <div class="faq-item py-4" id="faq-1">
+                <div class="faq-question flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-semibold text-white">What types of businesses do you work with?</h3>
+                    <svg class="w-6 h-6 text-blue-400 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer mt-2 text-gray-300">
+                    <p>We work with businesses of all sizes, from startups to enterprise-level organizations across various industries. Our solutions are scalable and can be customized to meet the specific needs of your business, regardless of its size or sector.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ Item 2 -->
+            <div class="faq-item py-4" id="faq-2">
+                <div class="faq-question flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-semibold text-white">How long does it take to develop a custom solution?</h3>
+                    <svg class="w-6 h-6 text-blue-400 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer mt-2 text-gray-300">
+                    <p>The timeline for developing a custom solution varies depending on the complexity and scope of the project. A simple application might take 1-2 months, while more complex enterprise solutions can take 3-6 months or more. During our initial consultation, we'll provide you with a detailed timeline based on your specific requirements.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ Item 3 -->
+            <div class="faq-item py-4" id="faq-3">
+                <div class="faq-question flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-semibold text-white">Do you provide ongoing support after deployment?</h3>
+                    <svg class="w-6 h-6 text-blue-400 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer mt-2 text-gray-300">
+                    <p>Yes, we offer comprehensive post-deployment support and maintenance services to ensure your solution continues to run smoothly. We provide different support packages tailored to your needs, including 24/7 technical support, regular updates, and performance optimization.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ Item 4 -->
+            <div class="faq-item py-4" id="faq-4">
+                <div class="faq-question flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-semibold text-white">How much does it cost to develop a custom solution?</h3>
+                    <svg class="w-6 h-6 text-blue-400 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer mt-2 text-gray-300">
+                    <p>The cost of developing a custom solution depends on various factors, including the complexity, scope, and specific requirements of the project. We offer flexible pricing models, including fixed-price quotes and time and materials arrangements. Contact us for a free consultation and quote based on your project specifications.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ Item 5 -->
+            <div class="faq-item py-4" id="faq-5">
+                <div class="faq-question flex justify-between items-center cursor-pointer">
+                    <h3 class="text-xl font-semibold text-white">Can you integrate with our existing systems?</h3>
+                    <svg class="w-6 h-6 text-blue-400 faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer mt-2 text-gray-300">
+                    <p>Yes, we specialize in systems integration and can seamlessly connect your new solution with your existing systems and software. Our team has extensive experience working with various APIs, data formats, and integration protocols to ensure smooth data flow between different applications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Blog Posts Section (NEW) -->
+<!-- Latest Blog Posts Section -->
+<section class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-white">Latest from Our Blog</h2>
+            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Insights, industry trends, and technology updates from our experts.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for post in latest_posts %}
+            <div class="bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 transition-all duration-300 hover:-translate-y-2">
+                <div class="aspect-w-16 aspect-h-9 bg-gray-700">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <!-- Placeholder for blog post image -->
+                    <div class="w-full h-full bg-gradient-to-r from-blue-900 to-gray-800 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-blue-400 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1M19 20a2 2 0 002-2V8a2 2 0 00-2-2h-5M8 12h8M8 16h4"></path>
+                        </svg>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center text-sm text-gray-400 mb-4">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span>{{ post.created_at|date:"F d, Y" }}</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">{{ post.title }}</h3>
+                    <p class="text-gray-300 mb-4">{{ post.summary }}</p>
+                    <a href="{{ post.get_absolute_url }}" class="text-blue-400 hover:text-blue-300 font-medium inline-flex items-center">
+                        Read More 
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-8">
+                <p class="text-gray-400">No blog posts available yet. Check back soon!</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-10">
+            <a href="{% url 'blog_list' %}" class="inline-block px-8 py-3 border-2 border-blue-500 text-blue-400 hover:bg-blue-900 hover:bg-opacity-30 font-bold rounded-md transition-all">View All Articles</a>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-16 bg-gray-900 border-t border-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            {% include 'includes/newsletter_form.html' %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+{% include 'includes/cta_section.html' with cta_title="Ready to Transform Your Business?" cta_description="Contact us today to discuss how our technology solutions can help your business grow and thrive." cta_primary_text="Get Started" cta_secondary_text="Learn More" cta_secondary_url="/services/" %}
+
+<!-- JavaScript for Page Animations -->
+<script src="{% static 'js/hero-animations.js' %}"></script>
+<script>
+    // Stats counter animation
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        // Observe the stats section
+        const statsSection = document.querySelector('.stats-counter');
+        if (statsSection) {
+            observer.observe(statsSection.parentNode.parentNode);
+        }
+        
+        function animateCounters() {
+            document.querySelectorAll('.stats-counter').forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-value'));
+                const duration = 2000; // 2 seconds
+                const step = target / duration * 10;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        clearInterval(timer);
+                        counter.textContent = target + '+';
+                    } else {
+                        counter.textContent = Math.floor(current) + '+';
+                    }
+                }, 10);
+            });
+        }
+        
+        // FAQ accordion functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentNode;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all FAQs
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                    item.querySelector('.faq-answer').style.maxHeight = '0px';
+                    item.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                });
+                
+                // If the clicked one wasn't active, open it
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                    faqItem.querySelector('.faq-answer').style.maxHeight = faqItem.querySelector('.faq-answer').scrollHeight + 'px';
+                    faqItem.querySelector('.faq-icon').style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

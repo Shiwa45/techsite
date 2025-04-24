@@ -1,0 +1,53 @@
+{% load static %}
+<!-- Navigation -->
+<nav class="bg-gray-900 py-4 fixed w-full z-50 border-b border-gray-800">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+        <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-400 flex items-center">
+            <img src="{% static 'img/easyian-logo.png' %}" alt="Tech Solutions Logo" width="100px">
+        </a>
+        
+        <!-- Mobile menu button -->
+        <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
+        
+        <!-- Desktop menu -->
+        <ul class="hidden md:flex space-x-8">
+            <li><a href="{% url 'home' %}" class="text-white hover:text-blue-400 transition">Home</a></li>
+            <li><a href="{% url 'services' %}" class="text-white hover:text-blue-400 transition">Services</a></li>
+            <li><a href="{% url 'courses' %}" class="text-white hover:text-blue-400 transition">Courses</a></li>
+            <li><a href="{% url 'about' %}" class="text-white hover:text-blue-400 transition">About</a></li>
+            <li><a href="{% url 'contact' %}" class="text-white hover:text-blue-400 transition">Contact</a></li>
+        </ul>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-800">
+            <a href="{% url 'home' %}" class="block px-3 py-2 text-white hover:bg-gray-700 rounded">Home</a>
+            <a href="{% url 'services' %}" class="block px-3 py-2 text-white hover:bg-gray-700 rounded">Services</a>
+            <a href="{% url 'courses' %}" class="block px-3 py-2 text-white hover:bg-gray-700 rounded">Courses</a>
+            <a href="{% url 'about' %}" class="block px-3 py-2 text-white hover:bg-gray-700 rounded">About</a>
+            <a href="{% url 'contact' %}" class="block px-3 py-2 text-white hover:bg-gray-700 rounded">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Add the JavaScript for mobile menu toggle -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the mobile menu button and mobile menu
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        // Add click event listener to toggle the mobile menu
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                // Toggle the 'hidden' class to show/hide the mobile menu
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
