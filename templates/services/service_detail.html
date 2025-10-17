@@ -1,85 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ service.title }} - Easyian{% endblock %}
-{% block meta_description %}{{ service.description }}{% endblock %}
-
-{% block extra_css %}
-<style>
-    /* Service detail page styles */
-    .feature-item {
-        transition: all 0.3s ease;
-    }
-    
-    .feature-item:hover {
-        transform: translateY(-5px);
-        background-color: rgba(59, 130, 246, 0.1);
-    }
-    
-    .process-step {
-        position: relative;
-    }
-    
-    .process-step:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        right: -25px;
-        width: 50px;
-        height: 2px;
-        background: linear-gradient(90deg, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0.2));
-        transform: translateY(-50%);
-    }
-    
-    @media (max-width: 768px) {
-        .process-step:not(:last-child)::after {
-            display: none;
-        }
-    }
-    
-    /* Animation for tech icons */
-    .tech-icon {
-        transition: all 0.3s ease;
-    }
-    
-    .tech-icon:hover {
-        transform: rotate(10deg) scale(1.1);
-    }
-    
-    /* Gradient border */
-    .gradient-border {
-        position: relative;
-        border-radius: 0.5rem;
-        overflow: hidden;
-    }
-    
-    .gradient-border::before {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(45deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
-        background-size: 400% 400%;
-        z-index: -1;
-        animation: gradient-animation 6s ease infinite;
-        border-radius: inherit;
-    }
-    
-    @keyframes gradient-animation {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-</style>
-{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -104,238 +27,58 @@
     </div>
     
     <div class="container mx-auto px-4 relative z-10">
-        <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 text-white glitch-text" data-text="{{ service.title }}">{{ service.title }}</h1>
-        <p class="text-xl text-blue-400 text-center max-w-3xl mx-auto">{{ service.description }}</p>
+        <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 text-white" data-text="{{ product.name }}">{{ product.name }}</h1>
+        <p class="text-xl text-blue-400 text-center max-w-3xl mx-auto">{{ product.short_description }}</p>
     </div>
 </div>
 
-<!-- Service Overview Section -->
+<!-- Product Details Section -->
 <section class="py-16 bg-gray-900">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <!-- Service overview content -->
-            <div>
-                <h2 class="text-3xl font-bold mb-6 text-white">What We Offer</h2>
-                <div class="space-y-4 text-gray-300">
-                    <p>{{ service.long_description }}</p>
-                </div>
-                
-                <div class="mt-8">
-                    <h3 class="text-2xl font-semibold mb-4 text-white">Key Benefits</h3>
-                    <ul class="space-y-3">
-                        {% for benefit in service.benefits %}
-                        <li class="flex items-start">
-                            <svg class="w-6 h-6 text-blue-400 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span class="text-gray-300">{{ benefit }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                
-                <div class="mt-8">
-                    <a href="{% url 'contact' %}" class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded transition-colors">Request a Consultation</a>
-                </div>
-            </div>
-            
-            <!-- Service image or illustration -->
-            <div class="relative">
-                <div class="absolute -left-4 -top-4 w-24 h-24 bg-blue-500 opacity-20 rounded-lg"></div>
-                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-500 opacity-20 rounded-lg"></div>
-                <div class="relative z-10 gradient-border bg-gray-800 bg-opacity-70 p-6 rounded-lg overflow-hidden">
-                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
-                        <!-- Placeholder for service image -->
-                        <div class="w-full h-full bg-gradient-to-r from-blue-900 to-gray-800 flex items-center justify-center">
-                            <div class="text-center">
-                                <svg class="w-20 h-20 mx-auto text-blue-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ service.icon_path }}"></path>
-                                </svg>
-                                <h3 class="text-2xl font-bold text-white mb-2">{{ service.title }}</h3>
-                                <p class="text-gray-300">Tailored solutions for modern business needs</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="py-16 bg-gray-900 border-t border-gray-800">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-4 text-white">Key Features</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Discover the powerful capabilities of our {{ service.title }} solution.</p>
+        <!-- Introduction -->
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="text-3xl font-bold mb-6 text-white">Our {{ product.name }} Solutions</h2>
+            <p class="text-lg text-gray-300">{{ product.short_description }}</p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for feature in service.features %}
-            <div class="feature-item bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
-                <div class="w-14 h-14 mb-6 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full">
-                    <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path>
+        <!-- Features -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {% for feature in product.features.all %}
+            <div class="feature-card bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700">
+                <div class="w-16 h-16 bg-blue-900 bg-opacity-30 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <svg class="w-8 h-8 text-blue-400 feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ feature.icon_path }}"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-white">{{ feature }}</h3>
-                <p class="text-gray-300">We provide comprehensive {{ feature }} capabilities tailored to your specific business requirements.</p>
+                <h3 class="text-xl font-semibold mb-3 text-white text-center">{{ feature.title }}</h3>
+                <p class="text-gray-300 text-center">{{ feature.description }}</p>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-8">
+                <p class="text-gray-400">Feature details coming soon!</p>
             </div>
             {% endfor %}
         </div>
-    </div>
-</section>
-
-<!-- Process Section -->
-<section class="py-16 bg-gray-900 border-t border-gray-800">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-4 text-white">Our Process</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">How we deliver exceptional {{ service.title }} solutions.</p>
+        
+        <!-- City Selection -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold mb-6 text-white text-center">{{ product.name }} Services in Your City</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                {% for city in cities %}
+                <a href="{% url 'product_city_detail' product.slug city.slug %}" class="city-selector bg-gray-800 bg-opacity-50 rounded-lg p-4 border border-gray-700 text-center block hover:bg-gray-700 transition-colors">
+                    <h3 class="text-white font-semibold">{{ city.name }}</h3>
+                    <p class="text-blue-400 text-sm mt-2">View Details →</p>
+                </a>
+                {% endfor %}
+            </div>
         </div>
         
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-            {% for step in service.process %}
-            <div class="process-step bg-gray-800 bg-opacity-50 p-5 rounded-lg border border-gray-700 text-center mb-8 md:mb-0 w-full md:w-auto">
-                <div class="w-12 h-12 mx-auto mb-4 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full">
-                    <span class="text-xl font-bold text-blue-400">{{ forloop.counter }}</span>
-                </div>
-                <h3 class="text-lg font-semibold text-white">{{ step }}</h3>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<!-- Case Studies/Testimonials -->
-<section class="py-16 bg-gray-900 border-t border-gray-800">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-4 text-white">Success Stories</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">See how our {{ service.title }} solutions have helped businesses succeed.</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Case Study/Testimonial 1 -->
-            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 relative">
-                <!-- Quote icon -->
-                <div class="absolute top-4 right-4 text-blue-400 opacity-30">
-                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                    </svg>
-                </div>
-                
-                <div class="relative z-10">
-                    <p class="text-gray-300 mb-6">"The {{ service.title }} solution from Tech Solutions has transformed our business operations. We've experienced improved efficiency, reduced costs, and enhanced customer satisfaction."</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-blue-400 rounded-full mr-4 flex-shrink-0"></div>
-                        <div>
-                            <h4 class="text-white font-medium">John Thompson</h4>
-                            <p class="text-gray-400">CTO, Innovative Enterprises</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Case Study/Testimonial 2 -->
-            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 relative">
-                <!-- Quote icon -->
-                <div class="absolute top-4 right-4 text-blue-400 opacity-30">
-                    <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                    </svg>
-                </div>
-                
-                <div class="relative z-10">
-                    <p class="text-gray-300 mb-6">"We've been using Tech Solutions' {{ service.title }} for over a year now, and it has been a game-changer for our company. The implementation was smooth, and the ongoing support is exceptional."</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-blue-400 rounded-full mr-4 flex-shrink-0"></div>
-                        <div>
-                            <h4 class="text-white font-medium">Sarah Williams</h4>
-                            <p class="text-gray-400">Operations Manager, Global Tech</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- CTA Section -->
+        <div class="bg-gray-800 bg-opacity-50 p-8 rounded-lg border border-gray-700 text-center">
+            <h2 class="text-2xl font-bold mb-4 text-white">Ready to Get Started?</h2>
+            <p class="text-gray-300 mb-6 max-w-2xl mx-auto">Contact us today to discuss how our {{ product.name }} solutions can help your business thrive in the digital age.</p>
+            <a href="{% url 'contact' %}" class="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md transition-all">Contact Us</a>
         </div>
     </div>
 </section>
-
-<!-- FAQ Section -->
-<section class="py-16 bg-gray-900 border-t border-gray-800">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-4 text-white">Frequently Asked Questions</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Common questions about our {{ service.title }} solutions.</p>
-        </div>
-        
-        <div class="max-w-3xl mx-auto">
-            <!-- FAQ Item 1 -->
-            <div class="faq-item py-4 border-b border-gray-800">
-                <div class="faq-question flex justify-between items-center cursor-pointer">
-                    <h3 class="text-xl font-semibold text-white">How quickly can you implement a {{ service.title }} solution?</h3>
-                    <svg class="w-6 h-6 text-blue-400 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-                <div class="faq-answer hidden mt-4 text-gray-300">
-                    <p>Implementation timelines vary based on the complexity of your needs and the scale of your organization. Typically, our implementations range from 4-12 weeks. We'll provide a detailed timeline during our initial consultation after understanding your specific requirements.</p>
-                </div>
-            </div>
-            
-            <!-- FAQ Item 2 -->
-            <div class="faq-item py-4 border-b border-gray-800">
-                <div class="faq-question flex justify-between items-center cursor-pointer">
-                    <h3 class="text-xl font-semibold text-white">Is your {{ service.title }} solution customizable?</h3>
-                    <svg class="w-6 h-6 text-blue-400 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-                <div class="faq-answer hidden mt-4 text-gray-300">
-                    <p>Yes, all our solutions are highly customizable to meet your specific business needs. We work closely with you to understand your requirements and tailor our solutions accordingly. This ensures you get a solution that fits perfectly with your business processes and goals.</p>
-                </div>
-            </div>
-            
-            <!-- FAQ Item 3 -->
-            <div class="faq-item py-4 border-b border-gray-800">
-                <div class="faq-question flex justify-between items-center cursor-pointer">
-                    <h3 class="text-xl font-semibold text-white">Do you provide training and support?</h3>
-                    <svg class="w-6 h-6 text-blue-400 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-                <div class="faq-answer hidden mt-4 text-gray-300">
-                    <p>Absolutely. We provide comprehensive training for your team to ensure they can effectively use the system. Additionally, we offer ongoing support through various channels including phone, email, and a dedicated support portal. We also provide regular updates and maintenance to keep your solution running smoothly.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Call to Action -->
-{% include 'includes/cta_section.html' with cta_title="Ready to Transform Your Business?" cta_description="Contact us today to discuss how our " cta_title_addition=service.title cta_description_continuation=" solution can help your business grow and thrive." cta_primary_text="Get Started" cta_primary_url="/contact/" cta_secondary_text="View All Services" cta_secondary_url="/services/" %}
-
-<!-- JavaScript for FAQ toggles -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const faqQuestions = document.querySelectorAll('.faq-question');
-        
-        faqQuestions.forEach(question => {
-            question.addEventListener('click', function() {
-                const answer = this.nextElementSibling;
-                const icon = this.querySelector('svg');
-                
-                // Toggle answer visibility
-                answer.classList.toggle('hidden');
-                
-                // Rotate icon
-                if (answer.classList.contains('hidden')) {
-                    icon.classList.remove('rotate-180');
-                } else {
-                    icon.classList.add('rotate-180');
-                }
-            });
-        });
-    });
-</script>
 {% endblock %}

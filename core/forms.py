@@ -1,36 +1,42 @@
 from django import forms
 from .models import Lead, NewsletterSubscriber
 
+
 class ContactForm(forms.ModelForm):
     """
-    Form for handling contact page submissions that generate leads
+    Form for contact form submissions
     """
     class Meta:
         model = Lead
         fields = ['name', 'email', 'phone', 'company', 'interest', 'message']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'placeholder': ' '}),
-            'email': forms.EmailInput(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'placeholder': ' '}),
-            'phone': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'placeholder': ' '}),
-            'company': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'placeholder': ' '}),
-            'interest': forms.Select(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus appearance-none', 'placeholder': ' '}),
-            'message': forms.Textarea(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'rows': 5, 'placeholder': ' '}),
+            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Your Name*'}),
+            'email': forms.EmailInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Email Address*'}),
+            'phone': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Phone Number (optional)'}),
+            'company': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Company Name (optional)'}),
+            'interest': forms.Select(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'}),
+            'message': forms.Textarea(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'rows': 4, 'placeholder': 'How can we help you?*'}),
         }
         labels = {
             'name': 'Your Name',
             'email': 'Email Address',
-            'phone': 'Phone Number (Optional)',
-            'company': 'Company Name (Optional)',
-            'interest': 'What are you interested in?',
-            'message': 'Your Message',
+            'phone': 'Phone Number',
+            'company': 'Company Name',
+            'interest': 'I am interested in',
+            'message': 'Message',
         }
-    
-    # Add newsletter subscription checkbox (not in model)
-    newsletter = forms.BooleanField(
-        required=False, 
-        label='Subscribe to our newsletter for tech insights and updates',
-        widget=forms.CheckboxInput(attrs={'class': 'h-4 w-4 text-blue-600 border-gray-500 rounded focus:ring-blue-500 bg-gray-700'})
-    )
+        error_messages = {
+            'name': {
+                'required': 'Please enter your name',
+            },
+            'email': {
+                'required': 'Please enter your email address',
+                'invalid': 'Please enter a valid email address',
+            },
+            'message': {
+                'required': 'Please enter a message',
+            }
+        }
 
 
 class NewsletterForm(forms.ModelForm):
@@ -41,41 +47,40 @@ class NewsletterForm(forms.ModelForm):
         model = NewsletterSubscriber
         fields = ['email', 'name']
         widgets = {
-            'email': forms.EmailInput(attrs={'class': 'w-full md:flex-1 px-4 py-2 bg-gray-900 border border-gray-700 rounded text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent', 'placeholder': 'Your email address'}),
-            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent', 'placeholder': 'Your name (optional)'}),
+            'email': forms.EmailInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Email Address*'}),
+            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Your Name (optional)'}),
         }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['name'].required = False
+        labels = {
+            'email': 'Email Address',
+            'name': 'Your Name',
+        }
+        error_messages = {
+            'email': {
+                'required': 'Please enter your email address',
+                'invalid': 'Please enter a valid email address',
+                'unique': 'This email is already subscribed to our newsletter',
+            }
+        }
 
 
-class CourseInquiryForm(forms.ModelForm):
+class CityServiceContactForm(forms.ModelForm):
     """
-    Form for course inquiries that also generate leads
+    Form for contact from city-service pages
     """
     class Meta:
         model = Lead
-        fields = ['name', 'email', 'phone', 'message']
+        fields = ['name', 'email', 'phone', 'company', 'message']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'placeholder': ' '}),
-            'email': forms.EmailInput(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'placeholder': ' '}),
-            'phone': forms.TextInput(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'placeholder': ' '}),
-            'message': forms.Textarea(attrs={'class': 'w-full px-4 py-3 rounded cyber-input text-white form-focus placeholder-transparent', 'rows': 3, 'placeholder': ' '}),
+            'name': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Your Name*'}),
+            'email': forms.EmailInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Email Address*'}),
+            'phone': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Phone Number (optional)'}),
+            'company': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'placeholder': 'Company Name (optional)'}),
+            'message': forms.Textarea(attrs={'class': 'w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500', 'rows': 4, 'placeholder': 'How can we help you?*'}),
         }
         labels = {
             'name': 'Your Name',
             'email': 'Email Address',
-            'phone': 'Phone Number (Optional)',
-            'message': 'Your Questions or Comments',
+            'phone': 'Phone Number',
+            'company': 'Company Name',
+            'message': 'Message',
         }
-    
-    # Hidden field to store which course the user is inquiring about
-    course_name = forms.CharField(widget=forms.HiddenInput(), required=False)
-    
-    # Newsletter checkbox
-    newsletter = forms.BooleanField(
-        required=False, 
-        label='Subscribe to our newsletter for course updates and tech insights',
-        widget=forms.CheckboxInput(attrs={'class': 'h-4 w-4 text-blue-600 border-gray-500 rounded focus:ring-blue-500 bg-gray-700'})
-    )
