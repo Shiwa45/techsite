@@ -1,243 +1,525 @@
 {% extends 'base.html' %}
-{% load static %}
-{% load custom_filters %}
-
 
 {% block title %}{{ page_title }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
 <style>
-    /* Blog card styles */
+    /* Blog Page Specific Animations - FIXED */
+    @keyframes category-pulse {
+        0%, 100% { 
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        50% { 
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+        }
+    }
+    
+    @keyframes search-glow {
+        0%, 100% { 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        50% { 
+            box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2);
+        }
+    }
+    
+    /* FIXED: Simplified hover effect without complex animations */
     .blog-card {
         transition: all 0.3s ease;
-        overflow: hidden;
+        will-change: transform, box-shadow;
     }
     
     .blog-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
     
-    .blog-card .blog-image {
-        transition: all 0.5s ease;
+    .category-tag:hover {
+        animation: category-pulse 1s ease-in-out;
     }
     
-    .blog-card:hover .blog-image {
+    .search-input:focus {
+        animation: search-glow 2s ease-in-out infinite;
+    }
+    
+    .hero-blog-bg {
+        background: 
+            radial-gradient(circle at 25% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 75% 25%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.05) 0%, transparent 50%);
+    }
+    
+    .featured-badge {
+        background: linear-gradient(45deg, #3b82f6, #22c55e);
+        background-size: 200% 200%;
+        animation: gradient-shift 3s ease infinite;
+    }
+    
+    /* FIXED: Simplified read-time animation */
+    .read-time {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        will-change: opacity, transform;
+    }
+    
+    .blog-card:hover .read-time {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Additional fixes for smooth animations */
+    .blog-card * {
+        transition: color 0.3s ease;
+    }
+    
+    .blog-card img {
+        transition: transform 0.3s ease;
+    }
+    
+    .blog-card:hover img {
         transform: scale(1.05);
     }
     
-    /* Category pill styles */
-    .category-pill {
-        transition: all 0.3s ease;
+    /* Ensure proper z-index stacking */
+    .blog-card {
+        position: relative;
+        z-index: 1;
     }
     
-    .category-pill:hover {
-        transform: translateY(-3px);
+    .blog-card:hover {
+        z-index: 10;
     }
     
-    /* Blog animation */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* Ensure all text in blog cards is visible */
+    .blog-card h3,
+    .blog-card p,
+    .blog-card span {
+        color: #374151 !important;
     }
     
-    .fade-in-up {
-        animation: fadeInUp 0.5s ease forwards;
+    .blog-card h3 a {
+        color: #1f2937 !important;
+    }
+    
+    .blog-card h3 a:hover {
+        color: #3b82f6 !important;
+    }
+    
+    /* Ensure meta information is visible */
+    .blog-card .text-gray-600 {
+        color: #4b5563 !important;
+    }
+    
+    .blog-card .text-gray-500 {
+        color: #6b7280 !important;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<div class="pt-24 pb-12 bg-gray-900 relative overflow-hidden">
-    <!-- Circuit grid background -->
-    <div class="absolute inset-0 opacity-10 z-0 bg-grid"></div>
-    
-    <!-- Digital circuit lines -->
-    <div class="absolute inset-0 z-0">
-        <svg class="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="none">
-            <path class="circuit-line" d="M0,100 Q300,150 600,100 T1200,100" />
-            <path class="circuit-line" d="M0,200 Q400,250 700,200 T1200,200" />
-            <path class="circuit-line" d="M0,300 Q300,400 600,300 T1200,300" />
-            
-            <!-- Circuit nodes -->
-            <circle class="circuit-node" cx="100" cy="100" r="5" />
-            <circle class="circuit-node" cx="300" cy="200" r="5" />
-            <circle class="circuit-node" cx="500" cy="300" r="5" />
-            <circle class="circuit-node" cx="700" cy="200" r="5" />
-            <circle class="circuit-node" cx="900" cy="100" r="5" />
-        </svg>
+<section class="relative py-24 lg:py-32 overflow-hidden hero-blog-bg">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="animate-on-scroll">
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+                    <span class="block text-gray-900">Our</span>
+                    <span class="block bg-gradient-to-r from-blue-600 via-green-500 to-red-500 bg-clip-text text-transparent animate-gradient">
+                        Blog
+                    </span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                    Insights, trends, and expert advice from the world of technology. Stay updated with our latest thoughts and industry knowledge.
+                </p>
+            </div>
+        </div>
     </div>
     
-    <div class="container mx-auto px-4 relative z-10">
-        <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 text-white glitch-text" data-text="OUR BLOG">OUR BLOG</h1>
-        <p class="text-xl text-blue-400 text-center max-w-3xl mx-auto">Insights, news, and articles on technology, software development, and digital transformation.</p>
+    <!-- Floating Elements -->
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="floating-element absolute top-20 left-10 w-16 h-16 bg-blue-500/10 rounded-xl flex items-center justify-center">
+            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+        </div>
+        <div class="floating-element absolute top-40 right-20 w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+        </div>
+        <div class="floating-element absolute bottom-40 left-20 w-14 h-14 bg-red-500/10 rounded-lg flex items-center justify-center">
+            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+            </svg>
+        </div>
     </div>
-</div>
+</section>
 
-<!-- Featured Posts Section -->
-{% if featured_posts %}
-<section class="py-16 bg-gray-900">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold mb-10 text-white">Featured Articles</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {% for post in featured_posts %}
-            <div class="blog-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700" style="animation-delay: {{ forloop.counter|multiply:0.1 }}s;">
-                <div class="h-48 overflow-hidden relative">
-                    {% if post.featured_image %}
-                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="blog-image w-full h-full object-cover">
-                    {% else %}
-                    <div class="blog-image w-full h-full bg-gradient-to-r from-blue-900 to-gray-800 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-blue-400 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1M19 20a2 2 0 002-2V8a2 2 0 00-2-2h-5M8 12h8M8 16h4"></path>
+<!-- Search and Filter Section -->
+<section class="py-12 bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-6 items-center justify-between">
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-md w-full">
+                    <div class="relative">
+                        <input type="text" 
+                               placeholder="Search articles..." 
+                               class="search-input w-full px-6 py-4 pl-12 text-gray-900 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-300">
+                        <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    {% endif %}
-                    <div class="absolute top-3 left-3">
-                        <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                            {{ post.category.name }}
-                        </span>
-                    </div>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-white">
-                        <a href="{{ post.get_absolute_url }}" class="hover:text-blue-400 transition-colors">{{ post.title }}</a>
-                    </h3>
-                    <p class="text-gray-300 mb-4">{{ post.summary }}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-400">{{ post.created_at|date:"M d, Y" }}</span>
-                        <a href="{{ post.get_absolute_url }}" class="text-blue-400 hover:text-blue-300 font-medium inline-flex items-center">
-                            Read More 
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </a>
-                    </div>
+                
+                <!-- Categories Filter -->
+                <div class="flex flex-wrap gap-3">
+                    <span class="text-gray-600 font-medium">Categories:</span>
+                    <button class="category-tag px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition-all duration-300" data-category="all">
+                        All
+                    </button>
+                    {% for category in categories %}
+                    <button class="category-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300" data-category="{{ category.slug }}">
+                        {{ category.name }} ({{ category.post_count }})
+                    </button>
+                    {% endfor %}
                 </div>
             </div>
-            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Post -->
+{% if page_obj and page_obj.object_list %}
+{% with featured_post=page_obj.object_list|first %}
+{% if featured_post.featured %}
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12 animate-on-scroll">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                    Featured <span class="bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">Article</span>
+                </h2>
+            </div>
+            
+            <article class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover-lift animate-on-scroll">
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <!-- Image -->
+                    <div class="relative overflow-hidden">
+                        {% if featured_post.featured_image %}
+                        <img src="{{ featured_post.featured_image.url }}" 
+                             alt="{{ featured_post.title }}" 
+                             class="w-full h-64 lg:h-full object-cover transition-transform duration-300">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                             alt="{{ featured_post.title }}" 
+                             class="w-full h-64 lg:h-full object-cover transition-transform duration-300">
+                        {% endif %}
+                        <div class="absolute top-4 left-4">
+                            <span class="featured-badge px-3 py-1 text-white text-sm font-medium rounded-full">
+                                Featured
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="p-8 lg:p-12">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-600 text-sm font-medium rounded-full">{{ featured_post.category.name }}</span>
+                            <span class="text-gray-600 text-sm">{{ featured_post.created_at|date:"M d, Y" }}</span>
+                            <span class="text-gray-600 text-sm">• {{ featured_post.views }} views</span>
+                        </div>
+                        
+                        <h3 class="text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                            {{ featured_post.title }}
+                        </h3>
+                        
+                        <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                            {{ featured_post.summary }}
+                        </p>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHhwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                                     alt="Author" 
+                                     class="w-10 h-10 rounded-full object-cover">
+                                <div>
+                                    <div class="text-sm font-semibold text-gray-900">{{ featured_post.author.get_full_name|default:featured_post.author.username }}</div>
+                                    <div class="text-xs text-gray-500">Tech Writer</div>
+                                </div>
+                            </div>
+                            
+                            <a href="{% url 'blog_detail' featured_post.slug %}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-300">
+                                Read More
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
         </div>
     </div>
 </section>
 {% endif %}
+{% endwith %}
+{% endif %}
 
-<!-- Main Blog Content -->
-<section class="py-16 bg-gray-900 {% if featured_posts %}border-t border-gray-800{% endif %}">
-    <div class="container mx-auto px-4">
-        <div class="flex flex-col lg:flex-row">
-            <!-- Main blog posts -->
-            <div class="w-full lg:w-3/4 lg:pr-8">
-                <h2 class="text-3xl font-bold mb-10 text-white">Latest Articles</h2>
-                
-                {% if posts %}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {% for post in posts %}
-                    <div class="blog-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 fade-in-up" style="animation-delay: {{ forloop.counter|multiply:0.1 }}s;">
-                        <div class="h-48 overflow-hidden relative">
-                            {% if post.featured_image %}
-                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="blog-image w-full h-full object-cover">
-                            {% else %}
-                            <div class="blog-image w-full h-full bg-gradient-to-r from-blue-900 to-gray-800 flex items-center justify-center">
-                                <svg class="w-16 h-16 text-blue-400 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1M19 20a2 2 0 002-2V8a2 2 0 00-2-2h-5M8 12h8M8 16h4"></path>
-                                </svg>
-                            </div>
-                            {% endif %}
-                            <div class="absolute top-3 left-3">
-                                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                    {{ post.category.name }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold mb-3 text-white">
-                                <a href="{{ post.get_absolute_url }}" class="hover:text-blue-400 transition-colors">{{ post.title }}</a>
-                            </h3>
-                            <p class="text-gray-300 mb-4">{{ post.summary }}</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-400">{{ post.created_at|date:"M d, Y" }}</span>
-                                <a href="{{ post.get_absolute_url }}" class="text-blue-400 hover:text-blue-300 font-medium inline-flex items-center">
-                                    Read More 
-                                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div class="bg-gray-800 bg-opacity-50 p-8 rounded-lg border border-gray-700 text-center">
-                    <svg class="w-16 h-16 text-blue-400 opacity-50 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1M19 20a2 2 0 002-2V8a2 2 0 00-2-2h-5M8 12h8M8 16h4"></path>
-                    </svg>
-                    <h3 class="text-xl font-semibold mb-2 text-white">No Articles Yet</h3>
-                    <p class="text-gray-300">Check back soon for new content!</p>
-                </div>
-                {% endif %}
-            </div>
-            
-            <!-- Sidebar -->
-            <div class="w-full lg:w-1/4 mt-10 lg:mt-0">
-                <!-- Categories -->
-                <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700 mb-8">
-                    <h3 class="text-xl font-bold mb-4 text-white">Categories</h3>
-                    <div class="flex flex-wrap gap-2">
-                        {% for category in categories %}
-                        <a href="{% url 'blog_category' category.slug %}" class="category-pill bg-gray-700 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm inline-block mb-2">
-                            {{ category.name }} ({{ category.post_count }})
-                        </a>
-                        {% endfor %}
-                    </div>
-                </div>
-                
-                <!-- Recent posts -->
-                <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
-                    <h3 class="text-xl font-bold mb-4 text-white">Recent Posts</h3>
-                    <div class="space-y-4">
-                        {% for post in recent_posts %}
-                        <div class="flex items-start">
-                            <div class="w-16 h-16 flex-shrink-0 bg-gray-700 rounded overflow-hidden mr-3">
-                                {% if post.featured_image %}
-                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
-                                {% else %}
-                                <div class="w-full h-full bg-gradient-to-r from-blue-900 to-gray-800 flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-blue-400 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1M19 20a2 2 0 002-2V8a2 2 0 00-2-2h-5M8 12h8M8 16h4"></path>
-                                    </svg>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-white">
-                                    <a href="{{ post.get_absolute_url }}" class="hover:text-blue-400 transition-colors">{{ post.title|truncatechars:30 }}</a>
-                                </h4>
-                                <span class="text-xs text-gray-400">{{ post.created_at|date:"M d, Y" }}</span>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+<!-- Blog Posts Grid -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Latest <span class="bg-gradient-to-r from-green-500 to-red-500 bg-clip-text text-transparent">Articles</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Stay informed with our expert insights and practical advice on technology trends and best practices
+            </p>
         </div>
+        
+        {% if page_obj %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in page_obj %}
+            <article class="blog-card bg-white rounded-2xl shadow-lg overflow-hidden animate-on-scroll" data-category="{{ post.category.slug }}">
+                <!-- Image -->
+                <div class="relative overflow-hidden">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" 
+                         alt="{{ post.title }}" 
+                         class="w-full h-48 object-cover">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                         alt="{{ post.title }}" 
+                         class="w-full h-48 object-cover">
+                    {% endif %}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    <div class="read-time absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-full text-xs font-medium text-gray-700">
+                        {% load blog_extras %}
+                        {{ post.content|reading_time }} min read
+                    </div>
+                    {% if post.featured %}
+                    <div class="absolute top-4 left-4">
+                        <span class="px-2 py-1 bg-red-500 text-white text-xs font-medium rounded-full">
+                            Featured
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Content -->
+                <div class="p-6">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="px-3 py-1 bg-{{ post.category.name|slugify }}-100 text-{{ post.category.name|slugify }}-600 text-sm font-medium rounded-full">{{ post.category.name }}</span>
+                        <span class="text-gray-600 text-sm">{{ post.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors duration-300">
+                        <a href="{% url 'blog_detail' post.slug %}">
+                            {{ post.title }}
+                        </a>
+                    </h3>
+                    
+                    <p class="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
+                        {{ post.summary }}
+                    </p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                                 alt="Author" 
+                                 class="w-8 h-8 rounded-full object-cover">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-medium text-gray-700">{{ post.author.get_full_name|default:post.author.username }}</span>
+                                <span class="text-xs text-gray-500">{{ post.views }} views</span>
+                            </div>
+                        </div>
+                        
+                        <a href="{% url 'blog_detail' post.slug %}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-300 text-sm">
+                            Read More
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <!-- Tags -->
+                    {% if post.tags %}
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex flex-wrap gap-2">
+                            {% for tag in post.get_tag_list %}
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- No posts message -->
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No blog posts yet</h3>
+            <p class="text-gray-600">Check back soon for our latest insights and articles!</p>
+        </div>
+        {% endif %}
+        
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="flex justify-center mt-16 animate-on-scroll">
+            <nav class="flex items-center space-x-2">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 text-gray-600 hover:text-blue-600 transition-colors duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </a>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <span class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium">{{ num }}</span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}" class="px-4 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300">{{ num }}</a>
+                {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 text-gray-600 hover:text-blue-600 transition-colors duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
     </div>
 </section>
 
 <!-- Newsletter Section -->
-<section class="py-16 bg-gray-900 border-t border-gray-800">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto">
-            {% include 'includes/newsletter_form.html' %}
+<section class="py-20 bg-gradient-tech">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center animate-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+                Stay Updated with Our <span class="text-yellow-400">Newsletter</span>
+            </h2>
+            <p class="text-xl text-white/90 mb-8 leading-relaxed">
+                Get the latest articles, insights, and tech news delivered straight to your inbox every week
+            </p>
+            
+            <form class="max-w-md mx-auto">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <input type="email" 
+                           placeholder="Enter your email address" 
+                           required
+                           class="flex-1 px-6 py-4 rounded-full border-0 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30">
+                    <button type="submit" 
+                            class="px-8 py-4 bg-white text-gray-900 font-semibold rounded-full hover:bg-gray-100 transition-all duration-300 hover-lift focus:outline-none focus:ring-4 focus:ring-white/30">
+                        Subscribe
+                    </button>
+                </div>
+            </form>
+            
+            <p class="text-white/70 text-sm mt-4">
+                Join 10,000+ professionals. No spam, unsubscribe anytime.
+            </p>
         </div>
     </div>
-</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Blog page specific functionality - FIXED
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        const blogCards = document.querySelectorAll('.blog-card');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                blogCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const content = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                        card.style.display = 'block';
+                        // Remove problematic animation
+                        card.style.opacity = '1';
+                        card.style.transform = 'none';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        // Category filtering
+        const categoryTags = document.querySelectorAll('.category-tag');
+        
+        categoryTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                // Remove active class from all tags
+                categoryTags.forEach(t => {
+                    t.classList.remove('bg-blue-600', 'text-white');
+                    t.classList.add('bg-gray-100', 'text-gray-700');
+                });
+                
+                // Add active class to clicked tag
+                this.classList.remove('bg-gray-100', 'text-gray-700');
+                this.classList.add('bg-blue-600', 'text-white');
+                
+                // Filter posts (in a real implementation, this would filter by category)
+                const category = this.textContent.trim();
+                console.log('Filter by category:', category);
+            });
+        });
+        
+        // Staggered animation for blog cards
+        blogCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+        
+        // FIXED: Simplified hover effects without problematic animations
+        blogCards.forEach(card => {
+            const readTime = card.querySelector('.read-time');
+            
+            card.addEventListener('mouseenter', function() {
+                if (readTime) {
+                    readTime.style.opacity = '1';
+                    readTime.style.transform = 'translateY(0)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (readTime) {
+                    readTime.style.opacity = '0';
+                    readTime.style.transform = 'translateY(10px)';
+                }
+            });
+        });
+        
+        // Smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

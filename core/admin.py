@@ -1,14 +1,15 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
-    City, 
-    Service, 
-    CityService, 
-    Lead, 
-    NewsletterSubscriber, 
-    ResourceDownload, 
-    BlogCategory, 
-    BlogPost
+    City,
+    Service,
+    CityService,
+    Lead,
+    NewsletterSubscriber,
+    ResourceDownload,
+    BlogCategory,
+    BlogPost,
+    BlogSection
 )
 
 
@@ -95,25 +96,67 @@ class BlogCategoryAdmin(admin.ModelAdmin):
     post_count.short_description = 'Posts'
 
 
+class BlogSectionInline(admin.StackedInline):
+    model = BlogSection
+    extra = 1
+    fields = ('section_type', 'heading', 'heading_level', 'content', 'image', 'image_caption',
+              'video_url', 'code_language', 'list_items', 'order')
+
+    class Media:
+        css = {
+            'all': ('admin/css/blog_section.css',)
+        }
+
+
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'author', 'city', 'related_service', 'is_published', 'featured', 'views', 'created_at')
-    list_filter = ('is_published', 'featured', 'category', 'author', 'city', 'related_service')
-    search_fields = ('title', 'summary', 'content')
+    list_display = ('title', 'category', 'author', 'city', 'related_service', 'is_published',
+                    'featured', 'views', 'reading_time', 'created_at')
+    list_filter = ('is_published', 'featured', 'category', 'author', 'city', 'related_service', 'published_at')
+    search_fields = ('title', 'summary', 'content', 'tags')
     prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'created_at'
-    
+    inlines = [BlogSectionInline]
+    readonly_fields = ('views', 'created_at', 'updated_at', 'reading_time')
+
     fieldsets = (
-        ('Post Information', {
-            'fields': ('title', 'slug', 'category', 'author', 'featured_image', 'summary', 'content')
+        ('Basic Information', {
+            'fields': ('title', 'slug', 'category', 'author', 'featured_image', 'summary')
+        }),
+        ('Main Content', {
+            'fields': ('content',),
+            'description': 'Main content or introduction. Use sections below for structured content.'
+        }),
+        ('Author Information', {
+            'fields': ('author_bio', 'author_image'),
+            'classes': ('collapse',)
+        }),
+        ('SEO & Metadata', {
+            'fields': ('meta_title', 'meta_description', 'reading_time', 'tags'),
+            'classes': ('collapse',)
         }),
         ('Relationships', {
-            'fields': ('city', 'related_service')
+            'fields': ('city', 'related_service'),
+            'classes': ('collapse',)
         }),
         ('Publishing Options', {
-            'fields': ('is_published', 'featured', 'tags')
+            'fields': ('is_published', 'featured', 'published_at', 'views', 'created_at', 'updated_at')
         }),
     )
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # editing an existing object
+            return self.readonly_fields + ('created_at', 'updated_at')
+        return self.readonly_fields
+
+
+@admin.register(BlogSection)
+class BlogSectionAdmin(admin.ModelAdmin):
+    list_display = ('blog_post', 'section_type', 'heading', 'order')
+    list_filter = ('section_type', 'blog_post')
+    search_fields = ('heading', 'content', 'blog_post__title')
+    list_editable = ('order',)
+    ordering = ('blog_post', 'order')
 
 
 # Register CityService

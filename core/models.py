@@ -157,7 +157,7 @@ class Lead(models.Model):
     job_title = models.CharField(max_length=100, blank=True, null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, related_name='leads')
     
-    interest = models.CharField(max_length=50, choices=INTEREST_CHOICES, default='other')
+    interest = models.CharField(max_length=50, choices=INTEREST_CHOICES, default='other', blank=True)
     specific_service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name='leads')
     message = models.TextField(blank=True, null=True)
     source = models.CharField(max_length=50, choices=SOURCE_CHOICES, default='contact_form')
@@ -248,28 +248,114 @@ class BlogPost(models.Model):
     featured_image = models.ImageField(upload_to='blog/', blank=True, null=True)
     summary = models.TextField(max_length=300)
     content = models.TextField()
+
+    # Enhanced rich content fields
+    sections = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Blog sections with headings, content, images, and more"
+    )
+    table_of_contents = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Auto-generated or custom table of contents"
+    )
+
+    # Author details
+    author_bio = models.TextField(blank=True, help_text="Custom author bio for this post")
+    author_image = models.ImageField(upload_to='authors/', blank=True, null=True)
+
+    # SEO and metadata
+    meta_title = models.CharField(max_length=200, blank=True)
+    meta_description = models.TextField(max_length=160, blank=True)
+    reading_time = models.IntegerField(default=0, help_text="Estimated reading time in minutes")
+
+    # Relations
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, related_name='blog_posts')
     related_service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name='blog_posts')
+
+    # Status and visibility
     is_published = models.BooleanField(default=True)
+    featured = models.BooleanField(default=False)
+
+    # Engagement metrics
+    views = models.PositiveIntegerField(default=0)
+
+    # Tags and categorization
+    tags = models.CharField(max_length=300, blank=True, help_text="Separate tags with commas")
+
+    # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    featured = models.BooleanField(default=False)
-    views = models.PositiveIntegerField(default=0)
-    tags = models.CharField(max_length=300, blank=True, help_text="Separate tags with commas")
-    
+    published_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         ordering = ['-created_at']
-        
+
     def __str__(self):
         return self.title
-    
+
+    def get_tag_list(self):
+        """Return a list of tags from the tags field"""
+        if self.tags:
+            return [tag.strip() for tag in self.tags.split(',') if tag.strip()]
+        return []
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+        if not self.meta_title:
+            self.meta_title = self.title
+        if not self.meta_description:
+            self.meta_description = self.summary
+        if not self.reading_time and self.content:
+            # Calculate reading time (avg 200 words per minute)
+            word_count = len(self.content.split())
+            self.reading_time = max(1, round(word_count / 200))
+        if self.is_published and not self.published_at:
+            self.published_at = timezone.now()
         super().save(*args, **kwargs)
-    
+
     def get_absolute_url(self):
         return reverse('blog_detail', kwargs={'slug': self.slug})
-    
+
     def get_tag_list(self):
         return [tag.strip() for tag in self.tags.split(',') if tag.strip()]
+
+    def increment_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
+
+
+class BlogSection(models.Model):
+    """
+    Model for individual blog sections with rich content
+    """
+    SECTION_TYPES = [
+        ('text', 'Text Content'),
+        ('heading', 'Heading'),
+        ('image', 'Image'),
+        ('quote', 'Quote/Blockquote'),
+        ('code', 'Code Block'),
+        ('list', 'List'),
+        ('video', 'Video Embed'),
+        ('custom', 'Custom HTML'),
+    ]
+
+    blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='blog_sections')
+    section_type = models.CharField(max_length=20, choices=SECTION_TYPES, default='text')
+    heading = models.CharField(max_length=300, blank=True)
+    heading_level = models.IntegerField(default=2, choices=[(2, 'H2'), (3, 'H3'), (4, 'H4')])
+    content = models.TextField(blank=True)
+    image = models.ImageField(upload_to='blog/sections/', blank=True, null=True)
+    image_caption = models.CharField(max_length=300, blank=True)
+    video_url = models.URLField(blank=True)
+    code_language = models.CharField(max_length=50, blank=True)
+    list_items = models.JSONField(default=list, blank=True)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.blog_post.title} - Section {self.order}"

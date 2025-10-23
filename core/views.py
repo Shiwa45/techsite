@@ -31,6 +31,17 @@ def home(request):
     # Get featured blog posts
     blog_posts = BlogPost.objects.filter(is_published=True, featured=True)[:3]
     
+    # If we don't have enough featured posts, get recent posts
+    if len(blog_posts) < 3:
+        remaining_count = 3 - len(blog_posts)
+        recent_posts = BlogPost.objects.filter(
+            is_published=True
+        ).exclude(
+            id__in=[post.id for post in blog_posts]
+        ).order_by('-created_at')[:remaining_count]
+        
+        blog_posts = list(blog_posts) + list(recent_posts)
+    
     # Handle newsletter subscription form on homepage
     if request.method == 'POST' and 'newsletter_email' in request.POST:
         newsletter_form = NewsletterForm(request.POST)
@@ -323,11 +334,33 @@ def blog_detail(request, slug):
     post.views += 1
     post.save()
     
-    # Get related posts (same category)
-    related_posts = BlogPost.objects.filter(
+    # Get related posts with improved logic
+    related_posts = []
+    
+    # First, try to get posts from the same category
+    same_category_posts = BlogPost.objects.filter(
         category=post.category,
         is_published=True
-    ).exclude(id=post.id).order_by('-created_at')[:3]
+    ).exclude(id=post.id).order_by('-created_at', '-views')[:3]
+    
+    related_posts.extend(same_category_posts)
+    
+    # If we don't have enough posts from same category, get from other categories
+    if len(related_posts) < 3:
+        remaining_count = 3 - len(related_posts)
+        other_posts = BlogPost.objects.filter(
+            is_published=True
+        ).exclude(
+            id__in=[p.id for p in related_posts] + [post.id]
+        ).order_by('-created_at', '-views')[:remaining_count]
+        
+        related_posts.extend(other_posts)
+    
+    # If still no posts, get any published posts (excluding current)
+    if len(related_posts) == 0:
+        related_posts = BlogPost.objects.filter(
+            is_published=True
+        ).exclude(id=post.id).order_by('-created_at')[:3]
     
     context = {
         'page_title': post.title + ' | Easyian Blog',
@@ -362,25 +395,40 @@ def blog_category(request, category_slug):
     return render(request, 'blog/blog_category.html', context)
 
 
-def contact(request):
-    """
-    View for the contact page
-    """
+def landing(request):
+    """Landing page for Facebook/Meta ads"""
     if request.method == 'POST':
         contact_form = ContactForm(request.POST)
         if contact_form.is_valid():
-            contact_form.save()
-            messages.success(request, "Thank you for your message. Our team will contact you shortly.")
+            lead = contact_form.save(commit=False)
+            lead.source = 'landing_page'
+            lead.save()
+            messages.success(request, "Thank you! We'll get back to you within 24 hours.")
             return redirect('contact_success')
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
         contact_form = ContactForm()
-    
-    context = {
-        'page_title': 'Contact Us | Easyian',
-        'meta_description': 'Get in touch with our team for expert technology solutions tailored to your business needs.',
-        'contact_form': contact_form,
-    }
-    return render(request, 'contact.html', context)
+
+    return render(request, 'landing.html', {'contact_form': contact_form})
+
+
+def contact(request):
+    """Simple contact form view"""
+    if request.method == 'POST':
+        contact_form = ContactForm(request.POST)
+        if contact_form.is_valid():
+            lead = contact_form.save(commit=False)
+            lead.source = 'contact_form'
+            lead.save()
+            messages.success(request, "Thank you! We'll get back to you within 24 hours.")
+            return redirect('contact_success')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        contact_form = ContactForm()
+
+    return render(request, 'contact.html', {'contact_form': contact_form})
 
 
 def contact_success(request):

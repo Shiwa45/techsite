@@ -1,209 +1,170 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}About Us - Tech Solutions{% endblock %}
-{% block meta_description %}Learn about Tech Solutions, our story, our team, and our mission to deliver innovative technology solutions to businesses worldwide.{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ meta_description }}{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <style>
-    /* Timeline styles */
-    .timeline {
-        position: relative;
-        max-width: 1200px;
-        margin: 0 auto;
+    /* About Page Specific Animations */
+    @keyframes mission-glow {
+        0%, 100% { 
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+            transform: scale(1);
+        }
+        50% { 
+            box-shadow: 0 0 50px rgba(34, 197, 94, 0.5);
+            transform: scale(1.02);
+        }
     }
     
-    .timeline::after {
-        content: '';
-        position: absolute;
-        width: 4px;
-        background: linear-gradient(to bottom, rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0.3));
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        margin-left: -2px;
+    @keyframes vision-pulse {
+        0%, 100% { 
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        50% { 
+            box-shadow: 0 0 50px rgba(59, 130, 246, 0.5);
+        }
     }
     
-    .timeline-item {
-        position: relative;
-        width: 50%;
-        padding: 30px 40px;
+    @keyframes values-rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
     
-    .timeline-item::after {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background-color: rgba(59, 130, 246, 0.8);
-        border-radius: 50%;
-        top: 40px;
-        z-index: 1;
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    @keyframes team-hover {
+        0% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-10px) scale(1.05); }
+        100% { transform: translateY(0) scale(1); }
     }
     
-    .timeline-left {
-        left: 0;
-        text-align: right;
+    .mission-card {
+        animation: mission-glow 4s ease-in-out infinite;
     }
     
-    .timeline-right {
-        left: 50%;
-        text-align: left;
+    .vision-card {
+        animation: vision-pulse 3s ease-in-out infinite;
     }
     
-    .timeline-left::after {
-        right: -10px;
-    }
-    
-    .timeline-right::after {
-        left: -10px;
-    }
-    
-    /* Values card hover effects */
-    .value-card {
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-    
-    .value-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
-    }
-    
-    .value-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background: linear-gradient(90deg, #3b82f6, #60a5fa);
-        z-index: 1;
-        transition: height 0.3s ease;
-    }
-    
-    .value-card:hover::before {
-        height: 7px;
-    }
-    
-    /* Team member card hover effect */
-    .team-card {
-        transition: all 0.3s ease;
-        cursor: pointer;
+    .values-icon {
+        animation: values-rotate 20s linear infinite;
     }
     
     .team-card:hover {
-        transform: translateY(-10px);
+        animation: team-hover 0.6s ease-in-out;
     }
     
-    .team-card:hover .team-overlay {
-        opacity: 1;
+    .hero-about-bg {
+        background: 
+            radial-gradient(circle at 30% 70%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.05) 0%, transparent 50%);
     }
     
-    .team-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent);
-        padding: 30px 20px 20px;
-        transition: all 0.3s ease;
-        opacity: 0;
-    }
-    
-    /* Stats counter animation */
-    .stats-counter {
-        font-feature-settings: "tnum";
-        font-variant-numeric: tabular-nums;
-    }
-    
-    /* Circuit background */
-    .circuit-bg {
-        background-image: 
-            linear-gradient(to right, rgba(30, 41, 59, 0.7), rgba(30, 41, 59, 0.7)),
-            url("{% static 'images/circuit-pattern.svg' %}");
-        background-size: cover;
-        background-position: center;
-    }
-    
-    /* Client logo hover */
-    .client-logo {
-        filter: grayscale(100%);
-        opacity: 0.6;
-        transition: all 0.3s ease;
-    }
-    
-    .client-logo:hover {
-        filter: grayscale(0%);
-        opacity: 1;
+    .animate-pulse-glow {
+        animation: mission-glow 3s ease-in-out infinite;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<div class="pt-24 pb-20 bg-gray-900 relative overflow-hidden">
-    <!-- Circuit grid background -->
-    <div class="absolute inset-0 opacity-10 z-0 bg-grid"></div>
-    
-    <!-- Digital circuit lines -->
-    <div class="absolute inset-0 z-0">
-        <svg class="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="none">
-            <path class="circuit-line" d="M0,100 Q300,150 600,100 T1200,100" />
-            <path class="circuit-line" d="M0,200 Q400,250 700,200 T1200,200" />
-            <path class="circuit-line" d="M0,300 Q300,400 600,300 T1200,300" />
-            
-            <!-- Circuit nodes -->
-            <circle class="circuit-node" cx="100" cy="100" r="5" />
-            <circle class="circuit-node" cx="300" cy="200" r="5" />
-            <circle class="circuit-node" cx="500" cy="300" r="5" />
-            <circle class="circuit-node" cx="700" cy="200" r="5" />
-            <circle class="circuit-node" cx="900" cy="100" r="5" />
-        </svg>
+<section class="relative py-24 lg:py-32 overflow-hidden hero-about-bg">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="animate-on-scroll">
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+                    <span class="block text-gray-900">About</span>
+                    <span class="block bg-gradient-to-r from-blue-600 via-green-500 to-red-500 bg-clip-text text-transparent animate-gradient">
+                        Easyian
+                    </span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                    Pioneering the future of technology with innovative solutions that empower businesses to achieve extraordinary success in the digital age.
+                </p>
+            </div>
+        </div>
     </div>
     
-    <div class="container mx-auto px-4 relative z-10">
-        <h1 class="text-4xl md:text-5xl font-bold text-center mb-6 text-white glitch-text" data-text="ABOUT US">ABOUT US</h1>
-        <p class="text-xl text-blue-400 text-center max-w-3xl mx-auto">Getting to know the team behind the technology solutions that drive business success.</p>
+    <!-- Floating Elements -->
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="floating-element absolute top-20 left-10 w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center">
+            <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+        </div>
+        <div class="floating-element absolute top-40 right-20 w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+            </svg>
+        </div>
+        <div class="floating-element absolute bottom-40 left-20 w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center">
+            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+        </div>
     </div>
-</div>
+</section>
 
 <!-- Our Story Section -->
-<section class="py-16 bg-gray-900">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <!-- Story content -->
-            <div>
-                <h2 class="text-3xl font-bold mb-6 text-white">Our Story</h2>
-                <div class="space-y-4 text-gray-300">
-                    <p>Easyian was founded in 2017 with a clear mission: to deliver innovative technology solutions that help businesses of all sizes thrive in the digital era. What began as a small team of passionate developers has grown into a comprehensive technology company serving clients worldwide.</p>
-                    <p>Our journey started when our founders, John Smith and Sarah Johnson, recognized a gap in the market for technology services that truly understood business needs. Having worked in enterprise environments, they experienced firsthand the challenges of implementing technology solutions that aligned with business objectives.</p>
-                    <p>From our humble beginnings focusing on custom software development, we've expanded our offerings to include CRM solutions, HRMS systems, API development, VoIP services, and more. Throughout our growth, we've maintained our commitment to quality, innovation, and client satisfaction.</p>
-                    <p>Today, with offices in three countries and a team of over 50 professionals, we continue to push the boundaries of what's possible with technology while delivering exceptional value to our clients.</p>
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <!-- Content -->
+            <div class="animate-on-scroll">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+                    Our <span class="bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">Story</span>
+                </h2>
+                <div class="space-y-6 text-lg text-gray-700 leading-relaxed">
+                    <p>
+                        Founded with a vision to democratize technology access, <span class="font-semibold text-blue-600">Easyian</span> 
+                        emerged from a simple belief: every business, regardless of size, deserves access to cutting-edge technology solutions 
+                        that can transform their operations and accelerate growth.
+                    </p>
+                    <p>
+                        Since our inception, we've been at the forefront of technological innovation, helping businesses navigate 
+                        the complex digital landscape with confidence. Our journey began with a small team of passionate developers 
+                        and has evolved into a comprehensive technology partner serving clients across diverse industries.
+                    </p>
+                    <p>
+                        Today, we pride ourselves on being more than just a service provider – we're strategic partners who understand 
+                        that technology is not just about code and systems, but about empowering people and transforming possibilities 
+                        into realities.
+                    </p>
                 </div>
                 
-                <div class="mt-8">
-                    <a href="/contact/" class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors">Get in Touch</a>
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-6 mt-12">
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">5+</div>
+                        <div class="text-sm text-gray-600 mt-1">Years of Excellence</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold bg-gradient-secondary bg-clip-text text-transparent">100+</div>
+                        <div class="text-sm text-gray-600 mt-1">Projects Completed</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl md:text-4xl font-bold bg-gradient-tech bg-clip-text text-transparent">50+</div>
+                        <div class="text-sm text-gray-600 mt-1">Happy Clients</div>
+                    </div>
                 </div>
             </div>
             
-            <!-- Image or animated illustration -->
-            <div class="relative">
-                <div class="absolute -left-4 -top-4 w-24 h-24 bg-blue-500 opacity-20 rounded-lg"></div>
-                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-500 opacity-20 rounded-lg"></div>
-                <div class="relative z-10 gradient-border bg-gray-800 bg-opacity-70 p-6 rounded-lg overflow-hidden">
-                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
-                        <!-- Placeholder for company image -->
-                        <div class="w-full h-full bg-gradient-to-r from-blue-900 to-gray-800 flex items-center justify-center">
-                            <div class="text-center">
-                                <svg class="w-20 h-20 mx-auto text-blue-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                                </svg>
-                                <h3 class="text-2xl font-bold text-white mb-2">Our Vision</h3>
-                                <p class="text-gray-300">To be the leading provider of innovative technology solutions that empower businesses to achieve their fullest potential.</p>
-                            </div>
+            <!-- Image -->
+            <div class="relative animate-on-scroll">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                     alt="Our Team" 
+                     class="w-full h-auto rounded-2xl shadow-2xl hover-lift">
+                
+                <!-- Floating Achievement Badge -->
+                <div class="absolute -top-6 -right-6 bg-white rounded-xl shadow-xl p-6 animate-float">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-2">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
                         </div>
+                        <div class="text-sm font-semibold text-gray-900">ISO Certified</div>
                     </div>
                 </div>
             </div>
@@ -211,418 +172,290 @@
     </div>
 </section>
 
-<!-- Our Values Section -->
-<section class="py-16 bg-gray-900 border-t border-gray-800">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-4 text-white">Our Core Values</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">The principles that guide our work and shape our company culture.</p>
+<!-- Mission, Vision & Values -->
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Our <span class="bg-gradient-to-r from-green-500 to-red-500 bg-clip-text text-transparent">Foundation</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Built on strong principles and driven by a clear vision for the future of technology
+            </p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Value 1 -->
-            <div class="value-card relative bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
-                <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full">
-                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Mission -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg mission-card animate-on-scroll">
+                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-white text-center">Innovation</h3>
-                <p class="text-gray-300 text-center">We constantly push the boundaries of what's possible, seeking creative solutions to complex problems.</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Our Mission</h3>
+                <p class="text-gray-600 text-center leading-relaxed">
+                    To empower businesses with innovative technology solutions that drive growth, efficiency, and success in the digital era. 
+                    We make advanced technology accessible and actionable for organizations of all sizes.
+                </p>
             </div>
             
-            <!-- Value 2 -->
-            <div class="value-card relative bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
-                <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full">
-                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            <!-- Vision -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg vision-card animate-on-scroll">
+                <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-red-500 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-white text-center">Collaboration</h3>
-                <p class="text-gray-300 text-center">We believe in the power of teamwork, partnering with our clients to achieve shared success.</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Our Vision</h3>
+                <p class="text-gray-600 text-center leading-relaxed">
+                    To be the leading technology partner that transforms ideas into reality, creating a future where technology 
+                    seamlessly enhances human potential and drives meaningful progress across all industries.
+                </p>
             </div>
             
-            <!-- Value 3 -->
-            <div class="value-card relative bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
-                <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full">
-                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            <!-- Values -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 animate-on-scroll">
+                <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-green-500 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                    <svg class="w-8 h-8 text-white values-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold mb-3 text-white text-center">Integrity</h3>
-                <p class="text-gray-300 text-center">We conduct business with honesty, transparency, and a strong ethical foundation in all our interactions.</p>
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Our Values</h3>
+                <p class="text-gray-600 text-center leading-relaxed">
+                    Innovation, integrity, excellence, and customer-centricity guide everything we do. We believe in transparent 
+                    communication, continuous learning, and building lasting relationships based on trust and mutual success.
+                </p>
             </div>
-            
-            <!-- Value 4 -->
-            <div class="value-card relative bg-gray-800 bg-opacity-50 p-6 rounded-lg border border-gray-700">
-                <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center bg-blue-900 bg-opacity-30 rounded-full">
-                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-semibold mb-3 text-white text-center">Excellence</h3>
-                <p class="text-gray-300 text-center">We strive for the highest standards of quality in everything we do, delivering solutions that exceed expectations.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Company Milestones Section -->
-<section id="milestones" class="py-20 bg-gray-900 border-t border-gray-800 relative overflow-hidden">
-    <div class="container mx-auto px-4 relative z-10">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-4 text-white">Our Journey</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">Key milestones that have shaped our growth over the years.</p>
-        </div>
-        
-        <div class="timeline hidden md:block">
-            <!-- 2015 -->
-            <div class="timeline-item timeline-left">
-                <div class="bg-gray-800 bg-opacity-70 p-6 rounded-lg border border-gray-700">
-                    <h3 class="text-2xl font-bold text-white mb-2">2017</h3>
-                    <h4 class="text-xl text-blue-400 mb-3">Company Founded</h4>
-                    <p class="text-gray-300">Easyian was established with a mission to deliver innovative technology solutions.</p>
-                </div>
-            </div>
-            
-            <!-- 2017 -->
-            <div class="timeline-item timeline-right">
-                <div class="bg-gray-800 bg-opacity-70 p-6 rounded-lg border border-gray-700">
-                    <h3 class="text-2xl font-bold text-white mb-2">2018</h3>
-                    <h4 class="text-xl text-blue-400 mb-3">Expanded Service Offerings</h4>
-                    <p class="text-gray-300">Added CRM and HRMS solutions to our portfolio of services.</p>
-                </div>
-            </div>
-            
-            <!-- 2019 -->
-            <div class="timeline-item timeline-left">
-                <div class="bg-gray-800 bg-opacity-70 p-6 rounded-lg border border-gray-700">
-                    <h3 class="text-2xl font-bold text-white mb-2">2019</h3>
-                    <h4 class="text-xl text-blue-400 mb-3">Launched Training Academy</h4>
-                    <p class="text-gray-300">Introduced comprehensive tech courses to help professionals advance their careers.</p>
-                </div>
-            </div>
-            
-            <!-- 2021 -->
-            <div class="timeline-item timeline-right">
-                <div class="bg-gray-800 bg-opacity-70 p-6 rounded-lg border border-gray-700">
-                    <h3 class="text-2xl font-bold text-white mb-2">2021</h3>
-                    <h4 class="text-xl text-blue-400 mb-3">Global Expansion</h4>
-                    <p class="text-gray-300">Opened offices in three new countries to serve international clients.</p>
-                </div>
-            </div>
-            
-            <!-- 2023 -->
-            <div class="timeline-item timeline-left">
-                <div class="bg-gray-800 bg-opacity-70 p-6 rounded-lg border border-gray-700">
-                    <h3 class="text-2xl font-bold text-white mb-2">2023</h3>
-                    <h4 class="text-xl text-blue-400 mb-3">Industry Recognition</h4>
-                    <p class="text-gray-300">Received multiple awards for innovation and excellence in technology services.</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Mobile timeline (visible on small screens) -->
-        <div class="md:hidden space-y-6">
-            {% for milestone in milestones %}
-            <div class="bg-gray-800 bg-opacity-70 p-6 rounded-lg border border-gray-700">
-                <h3 class="text-2xl font-bold text-white mb-2">{{ milestone.year }}</h3>
-                <h4 class="text-xl text-blue-400 mb-3">{{ milestone.title }}</h4>
-                <p class="text-gray-300">{{ milestone.description }}</p>
-            </div>
-            {% endfor %}
         </div>
     </div>
 </section>
 
 <!-- Team Section -->
-<section id="team" class="py-16 bg-gray-900 border-t border-gray-800">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold mb-4 text-white">Meet Our Team</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">The talented individuals behind our success.</p>
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Meet Our <span class="bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">Team</span>
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Passionate professionals dedicated to delivering exceptional technology solutions and driving your success
+            </p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Team Member 1 -->
-            <div class="team-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
-                <div class="aspect-w-3 aspect-h-4 bg-gray-700">
-                    <!-- Placeholder for team member image -->
-                    <div class="w-full h-full bg-gradient-to-b from-blue-900 to-gray-800"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-1 text-white">Vikash Mishra</h3>
-                    <p class="text-blue-400 mb-4">CEO & Founder</p>
-                    <p class="text-gray-300">With over 15 years of experience in technology leadership, John has driven innovation across multiple industries.</p>
-                </div>
-                <div class="team-overlay">
-                    <div class="flex space-x-4 mb-4">
-                        <a href="#" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 team-card p-8 text-center animate-on-scroll">
+                <div class="relative inline-block mb-6">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="John Smith" 
+                         class="w-24 h-24 rounded-full object-cover mx-auto">
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
                     </div>
-                    <p class="text-white mb-4">"Innovation is about finding the right technology for the right problem, not just using what's trendy."</p>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">John Smith</h3>
+                <p class="text-blue-600 font-semibold mb-4">CEO & Founder</p>
+                <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    Visionary leader with 15+ years of experience in technology innovation and business transformation.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <a href="#" class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 transition-colors duration-300">
+                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 transition-colors duration-300">
+                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Team Member 2 -->
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 team-card p-8 text-center animate-on-scroll">
+                <div class="relative inline-block mb-6">
+                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b029?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Sarah Johnson" 
+                         class="w-24 h-24 rounded-full object-cover mx-auto">
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Sarah Johnson</h3>
+                <p class="text-green-600 font-semibold mb-4">CTO & Co-Founder</p>
+                <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    Technical architect and innovation driver, specializing in scalable software solutions and emerging technologies.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <a href="#" class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition-colors duration-300">
+                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition-colors duration-300">
+                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
             
             <!-- Team Member 3 -->
-            <div class="team-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
-                <div class="aspect-w-3 aspect-h-4 bg-gray-700">
-                    <!-- Placeholder for team member image -->
-                    <div class="w-full h-full bg-gradient-to-b from-blue-900 to-gray-800"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-1 text-white">Priyam Bhargav</h3>
-                    <p class="text-blue-400 mb-4">Head of Product</p>
-                    <p class="text-gray-300">Priyam's background in user experience and product development ensures our solutions deliver exceptional value.</p>
-                </div>
-                <div class="team-overlay">
-                    <div class="flex space-x-4 mb-4">
-                        <a href="#" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                    </div>
-                    <p class="text-white mb-4">"Great products aren't just functional, they solve real problems in ways that feel intuitive and effortless."</p>
-                </div>
-            </div>
-            
-            <!-- Team Member 4 -->
-            <div class="team-card bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden shadow-lg border border-gray-700 relative">
-                <div class="aspect-w-3 aspect-h-4 bg-gray-700">
-                    <!-- Placeholder for team member image -->
-                    <div class="w-full h-full bg-gradient-to-b from-blue-900 to-gray-800"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-1 text-white">Shiwansh Mishra</h3>
-                    <p class="text-blue-400 mb-4">Lead Developer</p>
-                    <p class="text-gray-300">Shiwansh specializes in full-stack development and has led numerous successful projects for enterprise clients.</p>
-                </div>
-                <div class="team-overlay">
-                    <div class="flex space-x-4 mb-4">
-                        <a href="#" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
-                            </svg>
-                        </a>
-                        <a href="https://www.linkedin.com/in/shiwansh-mishra-212491264/?original_referer=https%3A%2F%2Fwww%2Egoogle%2Ecom%2F&originalSubdomain=in" class="text-white hover:text-blue-300 transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
-                            </svg>
-                        </a>
-                    </div>
-                    <p class="text-white mb-4">"Clean code and robust architecture are the foundations of sustainable technology solutions."</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Extended Team Section -->
-        <div class="mt-16">
-            <h3 class="text-2xl font-bold mb-8 text-white text-center">The Extended Team</h3>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <!-- Extended team member 1 -->
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto bg-blue-900 bg-opacity-30 rounded-full mb-4 flex items-center justify-center">
-                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 team-card p-8 text-center animate-on-scroll">
+                <div class="relative inline-block mb-6">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Mike Davis" 
+                         class="w-24 h-24 rounded-full object-cover mx-auto">
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <h4 class="text-lg font-medium text-white">Rohit agrwal</h4>
-                    <p class="text-blue-400">UX Designer</p>
                 </div>
-                
-                <!-- Extended team member 2 -->
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto bg-blue-900 bg-opacity-30 rounded-full mb-4 flex items-center justify-center">
-                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Mike Davis</h3>
+                <p class="text-red-600 font-semibold mb-4">Lead Developer</p>
+                <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                    Full-stack developer passionate about creating robust, scalable applications that solve real-world problems.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors duration-300">
+                        <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
                         </svg>
-                    </div>
-                    <h4 class="text-lg font-medium text-white">Rajesh Verma</h4>
-                    <p class="text-blue-400">Data Scientist</p>
-                </div>
-                
-                <!-- Extended team member 3 -->
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto bg-blue-900 bg-opacity-30 rounded-full mb-4 flex items-center justify-center">
-                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors duration-300">
+                        <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                         </svg>
-                    </div>
-                    <h4 class="text-lg font-medium text-white">Aman Chauhan</h4>
-                    <p class="text-blue-400">DevOps Engineer</p>
+                    </a>
                 </div>
-                
-                <!-- Extended team member 4 -->
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto bg-blue-900 bg-opacity-30 rounded-full mb-4 flex items-center justify-center">
-                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                    </div>
-                    <h4 class="text-lg font-medium text-white">Radhika Sharma</h4>
-                    <p class="text-blue-400">Project Manager</p>
-                </div>
-            </div>
-            
-            <div class="text-center mt-12">
-                <a href="/careers/" class="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md transition-all">Join Our Team</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Stats Section -->
-<section class="py-16 bg-gray-900 border-t border-gray-800 circuit-bg">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4 text-white">Our Impact by the Numbers</h2>
-            <p class="text-lg text-gray-300 max-w-3xl mx-auto">A glimpse at what we've accomplished over the years.</p>
+<!-- Company Culture -->
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center animate-on-scroll">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+                Our <span class="bg-gradient-to-r from-red-500 to-blue-600 bg-clip-text text-transparent">Culture</span>
+            </h2>
+            <p class="text-xl text-gray-600 leading-relaxed mb-12">
+                We foster an environment of innovation, collaboration, and continuous learning where every team member 
+                can thrive and contribute to our collective success.
+            </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Stat 1 -->
-            <div class="bg-gray-800 bg-opacity-70 p-8 rounded-lg border border-gray-700 text-center">
-                <div class="text-5xl font-bold text-blue-400 mb-2 stats-counter" data-value="500">0+</div>
-                <p class="text-xl text-white mb-2">Clients Worldwide</p>
-                <p class="text-gray-300">Businesses of all sizes across multiple industries.</p>
+            <!-- Culture Value 1 -->
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Innovation First</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    We embrace creativity and encourage bold thinking to develop groundbreaking solutions.
+                </p>
             </div>
             
-            <!-- Stat 2 -->
-            <div class="bg-gray-800 bg-opacity-70 p-8 rounded-lg border border-gray-700 text-center">
-                <div class="text-5xl font-bold text-blue-400 mb-2 stats-counter" data-value="1000">0+</div>
-                <p class="text-xl text-white mb-2">Projects Completed</p>
-                <p class="text-gray-300">Successful technology solutions delivered on time.</p>
+            <!-- Culture Value 2 -->
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Team Collaboration</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Together we achieve more. Collaboration and mutual support drive our success.
+                </p>
             </div>
             
-            <!-- Stat 3 -->
-            <div class="bg-gray-800 bg-opacity-70 p-8 rounded-lg border border-gray-700 text-center">
-                <div class="text-5xl font-bold text-blue-400 mb-2 stats-counter" data-value="50">0+</div>
-                <p class="text-xl text-white mb-2">Team Members</p>
-                <p class="text-gray-300">Passionate professionals dedicated to excellence.</p>
+            <!-- Culture Value 3 -->
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Continuous Learning</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    We invest in growth and development, staying ahead of technology trends.
+                </p>
             </div>
             
-            <!-- Stat 4 -->
-            <div class="bg-gray-800 bg-opacity-70 p-8 rounded-lg border border-gray-700 text-center">
-                <div class="text-5xl font-bold text-blue-400 mb-2 stats-counter" data-value="15">0+</div>
-                <p class="text-xl text-white mb-2">Industry Awards</p>
-                <p class="text-gray-300">Recognition for our innovation and quality.</p>
+            <!-- Culture Value 4 -->
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gradient-secondary rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Customer-Centricity</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Our clients are at the heart of everything we do, ensuring their success is our priority.
+                </p>
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
 
-
-<!-- Call to Action -->
-{% include 'includes/cta_section.html' with cta_title="Ready to Work With Us?" cta_description="Contact us today to discuss how our technology solutions can help your business grow and thrive." cta_primary_text="Get in Touch" cta_primary_url="/contact/" cta_secondary_text="View Services" cta_secondary_url="/services/" %}
-
-<!-- JavaScript for animations -->
+{% block extra_js %}
 <script>
+    // About page specific animations
     document.addEventListener('DOMContentLoaded', function() {
-        // Stats counter animation
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounters();
-                    observer.unobserve(entry.target);
+        // Staggered animation for mission, vision, values cards
+        const foundationCards = document.querySelectorAll('.mission-card, .vision-card, .values-card');
+        foundationCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+        
+        // Team cards animation
+        const teamCards = document.querySelectorAll('.team-card');
+        teamCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+        
+        // Culture values animation
+        const cultureValues = document.querySelectorAll('.animate-on-scroll');
+        cultureValues.forEach((value, index) => {
+            value.style.animationDelay = `${index * 0.1}s`;
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
-        }, { threshold: 0.1 });
+        });
         
-        // Observe the stats section
-        const statsSection = document.querySelector('.stats-counter');
-        if (statsSection) {
-            observer.observe(statsSection.parentNode.parentNode);
-        }
-        
-        function animateCounters() {
-            document.querySelectorAll('.stats-counter').forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-value'));
-                const duration = 2000; // 2 seconds
-                const step = target / duration * 10;
-                let current = 0;
-                
-                const timer = setInterval(() => {
-                    current += step;
-                    if (current >= target) {
-                        clearInterval(timer);
-                        counter.textContent = target + '+';
-                    } else {
-                        counter.textContent = Math.floor(current) + '+';
-                    }
-                }, 10);
+        // Parallax effect for floating elements
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const floatingElements = document.querySelectorAll('.floating-element');
+            
+            floatingElements.forEach((element, index) => {
+                const speed = 0.3 + (index * 0.1);
+                element.style.transform = `translate3d(0, ${scrolled * speed}px, 0)`;
             });
-        }
-        
-        // Intersection Observer for reveal animations
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('reveal-visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        // Apply to timeline items
-        document.querySelectorAll('.timeline-item').forEach(item => {
-            item.classList.add('opacity-0', 'translate-y-10');
-            item.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            revealObserver.observe(item);
         });
-        
-        // Apply to value cards
-        document.querySelectorAll('.value-card').forEach(card => {
-            card.classList.add('opacity-0', 'translate-y-10');
-            card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            revealObserver.observe(card);
-        });
-        
-        // Apply to team cards
-        document.querySelectorAll('.team-card').forEach(card => {
-            card.classList.add('opacity-0', 'translate-y-10');
-            card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            revealObserver.observe(card);
-        });
-        
-        // Add CSS for the animation
-        const scrollStyle = document.createElement('style');
-        scrollStyle.innerHTML = `
-            .reveal-visible {
-                opacity: 1 !important;
-                transform: translateY(0) !important;
-            }
-        `;
-        document.head.appendChild(scrollStyle);
     });
 </script>
 {% endblock %}
