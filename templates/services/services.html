@@ -117,7 +117,7 @@
             <div class="animate-on-scroll">
                 <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
                     <span class="block text-gray-900">Our</span>
-                    <span class="block bg-gradient-to-r from-blue-600 via-green-500 to-red-500 bg-clip-text text-transparent animate-gradient">
+                    <span class="block bg-gradient-to-r from-red-500 via-red-400 to-red-600 bg-clip-text text-transparent animate-gradient">
                         Services
                     </span>
                 </h1>
@@ -130,13 +130,13 @@
     
     <!-- Floating Tech Elements -->
     <div class="absolute inset-0 pointer-events-none">
-        <div class="floating-element absolute top-20 left-10 w-16 h-16 bg-blue-500/10 rounded-xl flex items-center justify-center">
-            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="floating-element absolute top-20 left-10 w-16 h-16 bg-red-500/10 rounded-xl flex items-center justify-center">
+            <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
             </svg>
         </div>
-        <div class="floating-element absolute top-40 right-20 w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="floating-element absolute top-40 right-20 w-12 h-12 bg-red-400/10 rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
             </svg>
         </div>
@@ -169,7 +169,7 @@
                         {% if service.features %}
                             {% for feature in service.features|slice:":3" %}
                             <li class="flex items-center text-sm text-gray-600">
-                                <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
                                 {{ feature }}
@@ -177,19 +177,19 @@
                             {% endfor %}
                         {% else %}
                             <li class="flex items-center text-sm text-gray-600">
-                                <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
                                 Custom Solutions
                             </li>
                             <li class="flex items-center text-sm text-gray-600">
-                                <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
                                 24/7 Support
                             </li>
                             <li class="flex items-center text-sm text-gray-600">
-                                <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
                                 Scalable Architecture
@@ -235,7 +235,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 animate-on-scroll">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Our <span class="bg-gradient-to-r from-green-500 to-red-500 bg-clip-text text-transparent">Process</span>
+                Our <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">Process</span>
             </h2>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 A proven methodology that ensures successful project delivery and exceptional results
@@ -256,7 +256,7 @@
             
             <!-- Process Step 2 -->
             <div class="process-step text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
+                <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-red-700 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
                     <span class="text-2xl font-bold text-white">2</span>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-4">Design</h3>
@@ -267,7 +267,7 @@
             
             <!-- Process Step 3 -->
             <div class="process-step text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
+                <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-red-700 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
                     <span class="text-2xl font-bold text-white">3</span>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-4">Development</h3>
@@ -295,7 +295,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 animate-on-scroll">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Technologies We <span class="bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">Use</span>
+                Technologies We <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">Use</span>
             </h2>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 We leverage the latest technologies to build robust, scalable, and future-ready solutions

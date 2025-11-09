@@ -6,228 +6,372 @@
 {% block extra_head %}
 <style>
     /* Hero Section Animations */
-    @keyframes digital-rain {
-        0% { transform: translateY(-100vh) rotate(0deg); opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
     }
     
-    @keyframes code-typing {
-        from { width: 0; }
-        to { width: 100%; }
+    @keyframes pulse-ring {
+        0% { transform: scale(0.8); opacity: 0; }
+        50% { opacity: 0.8; }
+        100% { transform: scale(2); opacity: 0; }
     }
     
-    @keyframes blink {
-        0%, 50% { opacity: 1; }
-        51%, 100% { opacity: 0; }
+    @keyframes rotate-border {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
     
-    @keyframes particle-float {
-        0%, 100% { transform: translateY(0px) translateX(0px); }
-        25% { transform: translateY(-20px) translateX(10px); }
-        50% { transform: translateY(-10px) translateX(-5px); }
-        75% { transform: translateY(-30px) translateX(15px); }
+    @keyframes gradient-shift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
     }
     
-    @keyframes tech-glow {
-        0%, 100% { 
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
-                        0 0 40px rgba(34, 197, 94, 0.2),
-                        0 0 60px rgba(239, 68, 68, 0.1);
-        }
-        50% { 
-            box-shadow: 0 0 40px rgba(59, 130, 246, 0.6),
-                        0 0 80px rgba(34, 197, 94, 0.4),
-                        0 0 120px rgba(239, 68, 68, 0.3);
-        }
+    @keyframes slide-in-left {
+        from { transform: translateX(-100px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
     
-    .digital-rain {
-        position: absolute;
-        color: #22c55e;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
-        animation: digital-rain 8s linear infinite;
+    @keyframes slide-in-right {
+        from { transform: translateX(100px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
     
-    .code-animation {
-        font-family: 'JetBrains Mono', monospace;
+    @keyframes fade-in-up {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes tech-pulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6), 0 0 60px rgba(239, 68, 68, 0.4); }
+    }
+    
+    @keyframes data-stream {
+        0% { transform: translateY(-100%) scaleY(0); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translateY(100%) scaleY(1); opacity: 0; }
+    }
+    
+    @keyframes orbit {
+        from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+    }
+    
+    .hero-gradient-bg {
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 25%, #0a0a0a 50%, #1a1a1a 75%, #0f0f0f 100%);
+        background-size: 400% 400%;
+        animation: gradient-shift 15s ease infinite;
+        position: relative;
         overflow: hidden;
-        white-space: nowrap;
-        border-right: 2px solid #3b82f6;
-        animation: code-typing 3s steps(40) 1s forwards, blink 1s infinite;
     }
     
-    .particle {
+    .hero-gradient-bg::before {
+        content: '';
         position: absolute;
-        width: 4px;
-        height: 4px;
-        background: linear-gradient(45deg, #3b82f6, #22c55e);
-        border-radius: 50%;
-        animation: particle-float 6s ease-in-out infinite;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 70%);
+        animation: rotate-border 20s linear infinite;
     }
     
-    .tech-glow {
-        animation: tech-glow 4s ease-in-out infinite;
-    }
-    
-    .hero-bg {
+    .hero-gradient-bg::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background: 
-            radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(239, 68, 68, 0.05) 0%, transparent 50%);
+            radial-gradient(circle at 20% 80%, rgba(239, 68, 68, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
     }
     
-    .floating-element {
-        animation: float 6s ease-in-out infinite;
+    .animated-grid {
+        position: absolute;
+        inset: 0;
+        background-image: 
+            linear-gradient(rgba(239, 68, 68, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(239, 68, 68, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        mask-image: radial-gradient(circle at center, black, transparent 80%);
     }
     
-    .floating-element:nth-child(2) {
-        animation-delay: -2s;
+    .data-stream {
+        position: absolute;
+        width: 2px;
+        height: 100px;
+        background: linear-gradient(to bottom, transparent, rgba(239, 68, 68, 0.8), transparent);
+        animation: data-stream 3s linear infinite;
     }
     
-    .floating-element:nth-child(3) {
-        animation-delay: -4s;
+    .pulse-ring {
+        position: absolute;
+        border: 2px solid rgba(239, 68, 68, 0.6);
+        border-radius: 50%;
+        animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    .tech-card {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .tech-card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(239, 68, 68, 0.5);
+        transform: translateY(-8px);
+    }
+    
+    .text-gradient-red {
+        background: linear-gradient(135deg, #ef4444 0%, #ffffff 50%, #ef4444 100%);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient-shift 5s ease infinite;
+    }
+    
+    .slide-in-left {
+        animation: slide-in-left 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    
+    .slide-in-right {
+        animation: slide-in-right 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    
+    .fade-in-up {
+        animation: fade-in-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    
+    .hover-lift {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .hover-lift:hover {
+        transform: translateY(-5px);
+    }
+    
+    .btn-primary {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .btn-primary:hover::before {
+        left: 100%;
+    }
+    
+    .btn-primary:hover {
+        box-shadow: 0 10px 40px rgba(239, 68, 68, 0.4);
+        transform: translateY(-2px);
+    }
+    
+    .orbit-container {
+        position: relative;
+        width: 200px;
+        height: 200px;
+    }
+    
+    .orbit-item {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        margin: -20px 0 0 -20px;
+        animation: orbit 20s linear infinite;
+    }
+    
+    .orbit-item:nth-child(2) { animation-delay: -5s; }
+    .orbit-item:nth-child(3) { animation-delay: -10s; }
+    .orbit-item:nth-child(4) { animation-delay: -15s; }
+    
+    .stats-card {
+        backdrop-filter: blur(10px);
+        background: rgba(15, 15, 15, 0.6);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card:hover {
+        border-color: rgba(239, 68, 68, 0.6);
+        box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+    }
+    
+    @keyframes scroll-hint {
+        0%, 100% { transform: translateY(0); opacity: 1; }
+        50% { transform: translateY(10px); opacity: 0.5; }
+    }
+    
+    .scroll-hint {
+        animation: scroll-hint 2s ease-in-out infinite;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden hero-bg">
-    <!-- Digital Rain Effect -->
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="digital-rain" style="left: 10%; animation-delay: 0s;">01010101</div>
-        <div class="digital-rain" style="left: 20%; animation-delay: 1s;">11001100</div>
-        <div class="digital-rain" style="left: 30%; animation-delay: 2s;">10101010</div>
-        <div class="digital-rain" style="left: 40%; animation-delay: 3s;">01100110</div>
-        <div class="digital-rain" style="left: 50%; animation-delay: 4s;">11110000</div>
-        <div class="digital-rain" style="left: 60%; animation-delay: 5s;">00111111</div>
-        <div class="digital-rain" style="left: 70%; animation-delay: 6s;">10011001</div>
-        <div class="digital-rain" style="left: 80%; animation-delay: 7s;">01010101</div>
-        <div class="digital-rain" style="left: 90%; animation-delay: 8s;">11001100</div>
-    </div>
+<section class="relative min-h-screen flex items-center justify-center hero-gradient-bg">
+    <!-- Animated Grid Background -->
+    <div class="animated-grid"></div>
     
-    <!-- Floating Particles -->
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="particle" style="top: 20%; left: 15%; animation-delay: 0s;"></div>
-        <div class="particle" style="top: 60%; left: 85%; animation-delay: 1s;"></div>
-        <div class="particle" style="top: 40%; left: 70%; animation-delay: 2s;"></div>
-        <div class="particle" style="top: 80%; left: 30%; animation-delay: 3s;"></div>
-        <div class="particle" style="top: 10%; left: 50%; animation-delay: 4s;"></div>
-    </div>
-    
-    <!-- Floating Tech Icons -->
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="floating-element absolute top-20 left-10 w-16 h-16 bg-blue-500/10 rounded-lg flex items-center justify-center">
-            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-            </svg>
-        </div>
-        <div class="floating-element absolute top-40 right-20 w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
-            </svg>
-        </div>
-        <div class="floating-element absolute bottom-40 left-20 w-14 h-14 bg-red-500/10 rounded-lg flex items-center justify-center">
-            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-        </div>
+    <!-- Data Streams -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="data-stream" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="data-stream" style="left: 25%; animation-delay: 0.5s;"></div>
+        <div class="data-stream" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="data-stream" style="left: 55%; animation-delay: 1.5s;"></div>
+        <div class="data-stream" style="left: 70%; animation-delay: 2s;"></div>
+        <div class="data-stream" style="left: 85%; animation-delay: 2.5s;"></div>
     </div>
     
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <!-- Hero Content -->
             <div class="text-center lg:text-left space-y-8">
-                <div class="space-y-6">
-                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                        <span class="block bg-gradient-to-r from-blue-600 via-green-500 to-red-500 bg-clip-text text-transparent animate-gradient">
-                            Innovative
+                <!-- Main Heading -->
+                <div class="space-y-4">
+                    <div class="slide-in-left" style="animation-delay: 0.2s;">
+                        <span class="inline-block px-4 py-2 bg-red-500/20 text-red-400 rounded-full text-sm font-semibold border border-red-500/30 mb-4">
+                            🚀 Next-Gen Technology Solutions
                         </span>
-                        <span class="block text-gray-900 mt-2">
-                            Technology
+                    </div>
+                    
+                    <h1 class="slide-in-left" style="animation-delay: 0.4s;">
+                        <span class="block text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2">
+                            Build The
                         </span>
-                        <span class="block bg-gradient-to-r from-red-500 via-blue-600 to-green-500 bg-clip-text text-transparent animate-gradient">
-                            Solutions
+                        <span class="block text-5xl md:text-6xl lg:text-7xl font-bold text-gradient-red mb-2">
+                            Future
+                        </span>
+                        <span class="block text-5xl md:text-6xl lg:text-7xl font-bold text-white">
+                            With Code
                         </span>
                     </h1>
-                    
-                    <div class="relative">
-                        <p class="text-xl md:text-2xl text-gray-600 leading-relaxed code-animation">
-                            Transforming businesses with cutting-edge software...
-                        </p>
-                    </div>
                 </div>
                 
-                <p class="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                    From custom software development to comprehensive digital solutions, 
-                    <span class="font-semibold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">Easyian</span> 
-                    empowers your business with innovative technology that drives growth and success.
+                <!-- Description -->
+                <p class="slide-in-left text-lg md:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto lg:mx-0" style="animation-delay: 0.6s;">
+                    Transform your business with cutting-edge software solutions. We craft scalable, innovative applications that drive growth and exceed expectations.
                 </p>
                 
                 <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="{% url 'contact' %}" class="group relative px-8 py-4 bg-gradient-primary text-white font-semibold rounded-full hover:shadow-2xl transition-all duration-300 hover-lift tech-glow">
-                        <span class="relative z-10">Get Started Today</span>
-                        <div class="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="fade-in-up flex flex-col sm:flex-row gap-4 justify-center lg:justify-start" style="animation-delay: 0.8s;">
+                    <a href="{% url 'contact' %}" class="btn-primary px-8 py-4 text-white font-semibold rounded-lg hover-lift inline-flex items-center justify-center group">
+                        <span class="relative z-10">Start Your Project</span>
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
                     </a>
-                    <a href="{% url 'services' %}" class="px-8 py-4 border-2 border-gray-900 text-gray-900 font-semibold rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300 hover-lift">
-                        Explore Services
+                    <a href="{% url 'services' %}" class="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover-lift inline-flex items-center justify-center">
+                        View Services
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
                     </a>
                 </div>
                 
                 <!-- Stats -->
-                <div class="grid grid-cols-3 gap-6 pt-8">
-                    <div class="text-center animate-on-scroll">
-                        <div class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">100+</div>
-                        <div class="text-sm text-gray-600 mt-1">Projects Delivered</div>
+                <div class="fade-in-up grid grid-cols-3 gap-4 pt-8" style="animation-delay: 1s;">
+                    <div class="stats-card rounded-xl p-4 text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-red-500 mb-1">100+</div>
+                        <div class="text-xs md:text-sm text-gray-400">Projects</div>
                     </div>
-                    <div class="text-center animate-on-scroll">
-                        <div class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-500 to-red-500 bg-clip-text text-transparent">50+</div>
-                        <div class="text-sm text-gray-600 mt-1">Happy Clients</div>
+                    <div class="stats-card rounded-xl p-4 text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-white mb-1">50+</div>
+                        <div class="text-xs md:text-sm text-gray-400">Clients</div>
                     </div>
-                    <div class="text-center animate-on-scroll">
-                        <div class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-red-500 to-blue-600 bg-clip-text text-transparent">5+</div>
-                        <div class="text-sm text-gray-600 mt-1">Years Experience</div>
+                    <div class="stats-card rounded-xl p-4 text-center">
+                        <div class="text-3xl md:text-4xl font-bold text-red-500 mb-1">5+</div>
+                        <div class="text-xs md:text-sm text-gray-400">Years</div>
                     </div>
                 </div>
             </div>
             
-            <!-- Hero Image/Animation -->
-            <div class="relative lg:h-[600px] flex items-center justify-center">
-                <div class="relative w-full max-w-lg">
-                    <!-- Main Tech Illustration -->
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-                             alt="Technology Solutions" 
-                             class="w-full h-auto rounded-2xl shadow-2xl hover-lift animate-float">
+            <!-- Hero Visual -->
+            <div class="slide-in-right relative flex items-center justify-center" style="animation-delay: 0.4s;">
+                <!-- Central Tech Hub -->
+                <div class="relative">
+                    <!-- Main Circle -->
+                    <div class="relative w-80 h-80 md:w-96 md:h-96">
+                        <!-- Pulse Rings -->
+                        <div class="pulse-ring w-full h-full" style="animation-delay: 0s;"></div>
+                        <div class="pulse-ring w-full h-full" style="animation-delay: 1s;"></div>
+                        <div class="pulse-ring w-full h-full" style="animation-delay: 2s;"></div>
                         
-                        <!-- Floating Tech Cards -->
-                        <div class="absolute -top-4 -left-4 w-24 h-24 bg-white rounded-xl shadow-xl p-4 animate-float tech-glow">
-                            <svg class="w-full h-full text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
-                            </svg>
+                        <!-- Center Core -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-40 h-40 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center shadow-2xl" style="animation: tech-pulse 3s ease-in-out infinite;">
+                                <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                </svg>
+                            </div>
                         </div>
                         
-                        <div class="absolute -top-4 -right-4 w-20 h-20 bg-white rounded-xl shadow-xl p-3 animate-float tech-glow" style="animation-delay: -1s;">
-                            <svg class="w-full h-full text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                            </svg>
+                        <!-- Orbiting Tech Icons -->
+                        <div class="orbit-container absolute inset-0">
+                            <div class="orbit-item">
+                                <div class="tech-card w-12 h-12 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="orbit-item">
+                                <div class="tech-card w-12 h-12 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="orbit-item">
+                                <div class="tech-card w-12 h-12 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="orbit-item">
+                                <div class="tech-card w-12 h-12 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <div class="absolute -bottom-4 -left-4 w-22 h-22 bg-white rounded-xl shadow-xl p-4 animate-float tech-glow" style="animation-delay: -2s;">
-                            <svg class="w-full h-full text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                            </svg>
-                        </div>
-                        
-                        <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-white rounded-xl shadow-xl p-4 animate-float tech-glow" style="animation-delay: -3s;">
-                            <svg class="w-full h-full text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
+                    </div>
+                    
+                    <!-- Floating Tech Cards -->
+                    <div class="absolute -top-10 -right-10 tech-card rounded-xl p-4 backdrop-blur-md" style="animation: float 6s ease-in-out infinite;">
+                        <div class="text-2xl font-bold text-red-400">99%</div>
+                        <div class="text-xs text-gray-400 mt-1">Success Rate</div>
+                    </div>
+                    
+                    <div class="absolute -bottom-10 -left-10 tech-card rounded-xl p-4 backdrop-blur-md" style="animation: float 6s ease-in-out infinite; animation-delay: -3s;">
+                        <div class="text-2xl font-bold text-white">24/7</div>
+                        <div class="text-xs text-gray-400 mt-1">Support</div>
+                    </div>
+                    
+                    <div class="absolute top-1/2 -right-20 tech-card rounded-xl p-4 backdrop-blur-md" style="animation: float 6s ease-in-out infinite; animation-delay: -1.5s;">
+                        <div class="text-2xl font-bold text-red-400">Fast</div>
+                        <div class="text-xs text-gray-400 mt-1">Delivery</div>
                     </div>
                 </div>
             </div>
@@ -235,10 +379,13 @@
     </div>
     
     <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-        </svg>
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 scroll-hint">
+        <div class="flex flex-col items-center">
+            <span class="text-gray-400 text-sm mb-2">Scroll to explore</span>
+            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
     </div>
 </section>
 
@@ -247,7 +394,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 animate-on-scroll">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Our <span class="bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">Services</span>
+                Our <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">Services</span>
             </h2>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Comprehensive technology solutions designed to accelerate your business growth and digital transformation
@@ -257,14 +404,14 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for service in services %}
             <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover-lift p-8 border border-gray-100 animate-on-scroll">
-                <div class="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center mb-6 animate-pulse-glow">
+                <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center mb-6">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-4">{{ service.title }}</h3>
                 <p class="text-gray-600 mb-6 leading-relaxed">{{ service.short_description }}</p>
-                <a href="{{ service.get_absolute_url }}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-300">
+                <a href="{{ service.get_absolute_url }}" class="inline-flex items-center text-red-600 font-semibold hover:text-red-700 transition-colors duration-300">
                     Learn More
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -272,16 +419,16 @@
                 </a>
             </div>
             {% empty %}
-            <!-- Default services if none exist -->
-            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover-lift p-8 border border-gray-100 animate-on-scroll">
-                <div class="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center mb-6 animate-pulse-glow">
+            <!-- Default services -->
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover-lift p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center mb-6">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-4">Software Development</h3>
                 <p class="text-gray-600 mb-6 leading-relaxed">Custom software solutions tailored to your business needs with cutting-edge technology.</p>
-                <a href="{% url 'services' %}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-300">
+                <a href="{% url 'services' %}" class="inline-flex items-center text-red-600 font-semibold hover:text-red-700 transition-colors duration-300">
                     Learn More
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -289,15 +436,15 @@
                 </a>
             </div>
             
-            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover-lift p-8 border border-gray-100 animate-on-scroll">
-                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 animate-pulse-glow">
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover-lift p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-br from-gray-800 to-black rounded-xl flex items-center justify-center mb-6">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
                     </svg>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-4">Web Development</h3>
                 <p class="text-gray-600 mb-6 leading-relaxed">Stunning, responsive websites that deliver exceptional user experiences and drive conversions.</p>
-                <a href="{% url 'services' %}" class="inline-flex items-center text-green-600 font-semibold hover:text-green-700 transition-colors duration-300">
+                <a href="{% url 'services' %}" class="inline-flex items-center text-red-600 font-semibold hover:text-red-700 transition-colors duration-300">
                     Learn More
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -305,8 +452,8 @@
                 </a>
             </div>
             
-            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover-lift p-8 border border-gray-100 animate-on-scroll">
-                <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-green-500 rounded-xl flex items-center justify-center mb-6 animate-pulse-glow">
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover-lift p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-br from-red-600 to-black rounded-xl flex items-center justify-center mb-6">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
@@ -323,8 +470,8 @@
             {% endfor %}
         </div>
         
-        <div class="text-center mt-12 animate-on-scroll">
-            <a href="{% url 'services' %}" class="inline-flex items-center px-8 py-4 bg-gradient-secondary text-white font-semibold rounded-full hover:shadow-xl transition-all duration-300 hover-lift">
+        <div class="text-center mt-12">
+            <a href="{% url 'services' %}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold rounded-lg hover:shadow-xl transition-all duration-300 hover-lift">
                 View All Services
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -341,7 +488,7 @@
             <!-- Content -->
             <div class="animate-on-scroll">
                 <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-                    Why Choose <span class="bg-gradient-to-r from-red-500 to-blue-600 bg-clip-text text-transparent">Easyian?</span>
+                    Why Choose <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">Easyian?</span>
                 </h2>
                 <p class="text-xl text-gray-600 mb-8 leading-relaxed">
                     We combine innovation, expertise, and dedication to deliver technology solutions that transform businesses and exceed expectations.
@@ -349,7 +496,7 @@
                 
                 <div class="space-y-6">
                     <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-lg flex items-center justify-center flex-shrink-0">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
@@ -361,7 +508,7 @@
                     </div>
                     
                     <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-gray-800 to-black rounded-lg flex items-center justify-center flex-shrink-0">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -373,7 +520,7 @@
                     </div>
                     
                     <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-black rounded-lg flex items-center justify-center flex-shrink-0">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
@@ -394,16 +541,16 @@
                          class="w-full h-auto rounded-2xl shadow-2xl hover-lift">
                     
                     <!-- Floating Stats -->
-                    <div class="absolute -top-6 -right-6 bg-white rounded-xl shadow-xl p-6 animate-float">
+                    <div class="absolute -top-6 -right-6 bg-white rounded-xl shadow-xl p-6" style="animation: float 6s ease-in-out infinite;">
                         <div class="text-center">
-                            <div class="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">99%</div>
+                            <div class="text-3xl font-bold bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">99%</div>
                             <div class="text-sm text-gray-600 mt-1">Client Satisfaction</div>
                         </div>
                     </div>
                     
-                    <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-6 animate-float" style="animation-delay: -2s;">
+                    <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-6" style="animation: float 6s ease-in-out infinite; animation-delay: -3s;">
                         <div class="text-center">
-                            <div class="text-3xl font-bold bg-gradient-secondary bg-clip-text text-transparent">24/7</div>
+                            <div class="text-3xl font-bold bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">24/7</div>
                             <div class="text-sm text-gray-600 mt-1">Support Available</div>
                         </div>
                     </div>
@@ -418,7 +565,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 animate-on-scroll">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Technologies We <span class="bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">Master</span>
+                Technologies We <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">Master</span>
             </h2>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Leveraging cutting-edge technologies to build robust, scalable, and future-ready solutions
@@ -466,7 +613,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 animate-on-scroll">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Latest <span class="bg-gradient-to-r from-green-500 to-red-500 bg-clip-text text-transparent">Insights</span>
+                Latest <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">Insights</span>
             </h2>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Stay updated with our latest thoughts, insights, and industry trends
@@ -487,7 +634,7 @@
                 {% endif %}
                 <div class="p-6">
                     <div class="flex items-center space-x-2 mb-4">
-                        <span class="px-3 py-1 bg-blue-100 text-blue-600 text-sm font-medium rounded-full">{{ post.category.name }}</span>
+                        <span class="px-3 py-1 bg-red-100 text-red-600 text-sm font-medium rounded-full">{{ post.category.name }}</span>
                         <span class="text-gray-600 text-sm">{{ post.created_at|date:"M d, Y" }}</span>
                         {% if post.reading_time > 0 %}
                         <span class="text-gray-500 text-sm">• {{ post.reading_time }} min read</span>
@@ -495,7 +642,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">{{ post.title }}</h3>
                     <p class="text-gray-600 mb-4 line-clamp-3">{{ post.summary }}</p>
-                    <a href="{% url 'blog_detail' post.slug %}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-300">
+                    <a href="{% url 'blog_detail' post.slug %}" class="inline-flex items-center text-red-600 font-semibold hover:text-red-700 transition-colors duration-300">
                         Read More
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -507,7 +654,7 @@
         </div>
         
         <div class="text-center mt-12 animate-on-scroll">
-            <a href="{% url 'blog_list' %}" class="inline-flex items-center px-8 py-4 bg-gradient-primary text-white font-semibold rounded-full hover:shadow-xl transition-all duration-300 hover-lift">
+            <a href="{% url 'blog_list' %}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold rounded-lg hover:shadow-xl transition-all duration-300 hover-lift">
                 View All Posts
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -519,13 +666,19 @@
 {% endif %}
 
 <!-- Newsletter Section -->
-<section class="py-20 bg-gradient-tech">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-20 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
+    <!-- Background Effects -->
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-gradient-to-r from-red-500/10 to-transparent"></div>
+        <div class="animated-grid"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="max-w-4xl mx-auto text-center animate-on-scroll">
             <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
-                Stay Updated with <span class="text-yellow-400">Easyian</span>
+                Stay Updated with <span class="text-gradient-red">Easyian</span>
             </h2>
-            <p class="text-xl text-white/90 mb-8 leading-relaxed">
+            <p class="text-xl text-gray-300 mb-8 leading-relaxed">
                 Get the latest insights, tech trends, and exclusive offers delivered straight to your inbox
             </p>
             
@@ -536,15 +689,15 @@
                            name="newsletter_email" 
                            placeholder="Enter your email address" 
                            required
-                           class="flex-1 px-6 py-4 rounded-full border-0 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30">
+                           class="flex-1 px-6 py-4 rounded-lg border-2 border-white/20 bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition-colors backdrop-blur-sm">
                     <button type="submit" 
-                            class="px-8 py-4 bg-white text-gray-900 font-semibold rounded-full hover:bg-gray-100 transition-all duration-300 hover-lift focus:outline-none focus:ring-4 focus:ring-white/30">
+                            class="btn-primary px-8 py-4 font-semibold rounded-lg whitespace-nowrap">
                         Subscribe Now
                     </button>
                 </div>
             </form>
             
-            <p class="text-white/70 text-sm mt-4">
+            <p class="text-gray-400 text-sm mt-4">
                 No spam, unsubscribe anytime. We respect your privacy.
             </p>
         </div>
@@ -556,17 +709,17 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center animate-on-scroll">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Ready to Transform Your <span class="bg-gradient-to-r from-red-500 to-blue-600 bg-clip-text text-transparent">Business?</span>
+                Ready to Transform Your <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">Business?</span>
             </h2>
             <p class="text-xl text-gray-600 mb-8 leading-relaxed">
                 Let's discuss how our innovative technology solutions can drive your business forward
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{% url 'contact' %}" class="px-8 py-4 bg-gradient-primary text-white font-semibold rounded-full hover:shadow-xl transition-all duration-300 hover-lift tech-glow">
-                    Start Your Project
+                <a href="{% url 'contact' %}" class="btn-primary px-8 py-4 font-semibold rounded-lg hover-lift inline-flex items-center justify-center">
+                    <span class="relative z-10">Start Your Project</span>
                 </a>
-                <a href="{% url 'services' %}" class="px-8 py-4 border-2 border-gray-900 text-gray-900 font-semibold rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300 hover-lift">
+                <a href="{% url 'services' %}" class="px-8 py-4 border-2 border-gray-900 text-gray-900 font-semibold rounded-lg hover:bg-gray-900 hover:text-white transition-all duration-300 hover-lift">
                     Explore Solutions
                 </a>
             </div>
@@ -577,32 +730,6 @@
 
 {% block extra_js %}
 <script>
-    // Code typing animation
-    document.addEventListener('DOMContentLoaded', function() {
-        const codeText = "Transforming businesses with cutting-edge software...";
-        const codeElement = document.querySelector('.code-animation');
-        
-        if (codeElement) {
-            codeElement.textContent = '';
-            let i = 0;
-            
-            function typeWriter() {
-                if (i < codeText.length) {
-                    codeElement.textContent += codeText.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, 100);
-                } else {
-                    // Remove cursor after typing
-                    setTimeout(() => {
-                        codeElement.style.borderRight = 'none';
-                    }, 1000);
-                }
-            }
-            
-            setTimeout(typeWriter, 2000);
-        }
-    });
-    
     // Enhanced scroll animations
     const observerOptions = {
         threshold: 0.1,
@@ -612,8 +739,8 @@
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-slide-up');
                 entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
             }
         });
     }, observerOptions);
@@ -623,19 +750,23 @@
         const animatedElements = document.querySelectorAll('.animate-on-scroll');
         animatedElements.forEach(el => {
             el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
             observer.observe(el);
         });
     });
     
-    // Parallax effect for floating elements
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const floatingElements = document.querySelectorAll('.floating-element');
-        
-        floatingElements.forEach((element, index) => {
-            const speed = 0.5 + (index * 0.1);
-            element.style.transform = `translateY(${scrolled * speed}px)`;
-        });
+    // Smooth scroll for scroll indicator
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollHint = document.querySelector('.scroll-hint');
+        if (scrollHint) {
+            scrollHint.addEventListener('click', function() {
+                window.scrollTo({
+                    top: window.innerHeight,
+                    behavior: 'smooth'
+                });
+            });
+        }
     });
 </script>
 {% endblock %}

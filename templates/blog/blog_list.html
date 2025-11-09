@@ -126,7 +126,7 @@
             <div class="animate-on-scroll">
                 <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
                     <span class="block text-gray-900">Our</span>
-                    <span class="block bg-gradient-to-r from-blue-600 via-green-500 to-red-500 bg-clip-text text-transparent animate-gradient">
+                    <span class="block bg-gradient-to-r from-red-500 via-red-400 to-red-600 bg-clip-text text-transparent animate-gradient">
                         Blog
                     </span>
                 </h1>
@@ -139,13 +139,13 @@
     
     <!-- Floating Elements -->
     <div class="absolute inset-0 pointer-events-none">
-        <div class="floating-element absolute top-20 left-10 w-16 h-16 bg-blue-500/10 rounded-xl flex items-center justify-center">
-            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="floating-element absolute top-20 left-10 w-16 h-16 bg-red-500/10 rounded-xl flex items-center justify-center">
+            <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
         </div>
-        <div class="floating-element absolute top-40 right-20 w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="floating-element absolute top-40 right-20 w-12 h-12 bg-red-400/10 rounded-full flex items-center justify-center">
+            <svg class="w-6 h-6 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
             </svg>
         </div>
@@ -167,7 +167,7 @@
                     <div class="relative">
                         <input type="text" 
                                placeholder="Search articles..." 
-                               class="search-input w-full px-6 py-4 pl-12 text-gray-900 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-300">
+                               class="search-input w-full px-6 py-4 pl-12 text-gray-900 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:outline-none transition-all duration-300">
                         <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
@@ -177,11 +177,11 @@
                 <!-- Categories Filter -->
                 <div class="flex flex-wrap gap-3">
                     <span class="text-gray-600 font-medium">Categories:</span>
-                    <button class="category-tag px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 transition-all duration-300" data-category="all">
+                    <button class="category-tag px-4 py-2 bg-red-600 text-white rounded-full text-sm font-medium hover:bg-red-700 transition-all duration-300" data-category="all">
                         All
                     </button>
                     {% for category in categories %}
-                    <button class="category-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300" data-category="{{ category.slug }}">
+                    <button class="category-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-red-600 hover:text-white transition-all duration-300" data-category="{{ category.slug }}">
                         {{ category.name }} ({{ category.post_count }})
                     </button>
                     {% endfor %}
@@ -200,7 +200,7 @@
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12 animate-on-scroll">
                 <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                    Featured <span class="bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">Article</span>
+                    Featured <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">Article</span>
                 </h2>
             </div>
             
@@ -227,7 +227,7 @@
                     <!-- Content -->
                     <div class="p-8 lg:p-12">
                         <div class="flex items-center space-x-4 mb-6">
-                            <span class="px-3 py-1 bg-blue-100 text-blue-600 text-sm font-medium rounded-full">{{ featured_post.category.name }}</span>
+                            <span class="px-3 py-1 bg-red-100 text-red-500 text-sm font-medium rounded-full">{{ featured_post.category.name }}</span>
                             <span class="text-gray-600 text-sm">{{ featured_post.created_at|date:"M d, Y" }}</span>
                             <span class="text-gray-600 text-sm">• {{ featured_post.views }} views</span>
                         </div>
@@ -251,7 +251,7 @@
                                 </div>
                             </div>
                             
-                            <a href="{% url 'blog_detail' featured_post.slug %}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-300">
+                            <a href="{% url 'blog_detail' featured_post.slug %}" class="inline-flex items-center text-red-500 font-semibold hover:text-red-600 transition-colors duration-300">
                                 Read More
                                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -273,7 +273,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 animate-on-scroll">
             <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Latest <span class="bg-gradient-to-r from-green-500 to-red-500 bg-clip-text text-transparent">Articles</span>
+                Latest <span class="bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">Articles</span>
             </h2>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Stay informed with our expert insights and practical advice on technology trends and best practices
@@ -316,7 +316,7 @@
                         <span class="text-gray-600 text-sm">{{ post.created_at|date:"M d, Y" }}</span>
                     </div>
                     
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors duration-300">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-red-500 transition-colors duration-300">
                         <a href="{% url 'blog_detail' post.slug %}">
                             {{ post.title }}
                         </a>
@@ -337,7 +337,7 @@
                             </div>
                         </div>
                         
-                        <a href="{% url 'blog_detail' post.slug %}" class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors duration-300 text-sm">
+                        <a href="{% url 'blog_detail' post.slug %}" class="inline-flex items-center text-red-500 font-semibold hover:text-red-600 transition-colors duration-300 text-sm">
                             Read More
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -375,7 +375,7 @@
         <div class="flex justify-center mt-16 animate-on-scroll">
             <nav class="flex items-center space-x-2">
                 {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 text-gray-600 hover:text-blue-600 transition-colors duration-300">
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 text-gray-600 hover:text-red-500 transition-colors duration-300">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
@@ -384,14 +384,14 @@
                 
                 {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
-                <span class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium">{{ num }}</span>
+                <span class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium">{{ num }}</span>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <a href="?page={{ num }}" class="px-4 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300">{{ num }}</a>
+                <a href="?page={{ num }}" class="px-4 py-2 text-gray-600 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-300">{{ num }}</a>
                 {% endif %}
                 {% endfor %}
                 
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 text-gray-600 hover:text-blue-600 transition-colors duration-300">
+                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 text-gray-600 hover:text-red-500 transition-colors duration-300">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
@@ -469,13 +469,13 @@
             tag.addEventListener('click', function() {
                 // Remove active class from all tags
                 categoryTags.forEach(t => {
-                    t.classList.remove('bg-blue-600', 'text-white');
+                    t.classList.remove('bg-red-600', 'text-white');
                     t.classList.add('bg-gray-100', 'text-gray-700');
                 });
                 
                 // Add active class to clicked tag
                 this.classList.remove('bg-gray-100', 'text-gray-700');
-                this.classList.add('bg-blue-600', 'text-white');
+                this.classList.add('bg-red-600', 'text-white');
                 
                 // Filter posts (in a real implementation, this would filter by category)
                 const category = this.textContent.trim();
