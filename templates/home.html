@@ -13,8 +13,8 @@
     
     @keyframes pulse-ring {
         0% { transform: scale(0.8); opacity: 0; }
-        50% { opacity: 0.8; }
-        100% { transform: scale(2); opacity: 0; }
+        50% { opacity: 0.6; }
+        100% { transform: scale(2.5); opacity: 0; }
     }
     
     @keyframes rotate-border {
@@ -43,8 +43,12 @@
     }
     
     @keyframes tech-pulse {
-        0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
-        50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6), 0 0 60px rgba(239, 68, 68, 0.4); }
+        0%, 100% { 
+            box-shadow: 0 0 40px rgba(239, 68, 68, 0.6), 0 0 70px rgba(59, 130, 246, 0.4), 0 0 100px rgba(168, 85, 247, 0.3); 
+        }
+        50% { 
+            box-shadow: 0 0 60px rgba(239, 68, 68, 0.8), 0 0 100px rgba(59, 130, 246, 0.6), 0 0 140px rgba(168, 85, 247, 0.4); 
+        }
     }
     
     @keyframes data-stream {
@@ -54,14 +58,20 @@
     }
     
     @keyframes orbit {
-        from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
-        to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+        from { transform: rotate(0deg) translateX(140px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(140px) rotate(-360deg); }
     }
     
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+    
+    /* Updated Hero Gradient - Lighter, Professional */
     .hero-gradient-bg {
-        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 25%, #0a0a0a 50%, #1a1a1a 75%, #0f0f0f 100%);
+        background:white;
         background-size: 400% 400%;
-        animation: gradient-shift 15s ease infinite;
+        animation: gradient-shift 20s ease infinite;
         position: relative;
         overflow: hidden;
     }
@@ -69,66 +79,102 @@
     .hero-gradient-bg::before {
         content: '';
         position: absolute;
+        background: radial-gradient(circle, rgba(199, 143, 143, 0.15) 0%, transparent 70%);
         top: -50%;
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 70%);
-        animation: rotate-border 20s linear infinite;
+        animation: rotate-border 25s linear infinite;
     }
     
     .hero-gradient-bg::after {
         content: '';
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(221, 180, 180, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(85, 247, 171, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(165, 84, 115, 0.06) 0%, transparent 60%);
         position: absolute;
+        
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: 
-            radial-gradient(circle at 20% 80%, rgba(239, 68, 68, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
     }
     
     .animated-grid {
         position: absolute;
         inset: 0;
         background-image: 
-            linear-gradient(rgba(239, 68, 68, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(239, 68, 68, 0.05) 1px, transparent 1px);
-        background-size: 50px 50px;
-        mask-image: radial-gradient(circle at center, black, transparent 80%);
+            linear-gradient(rgba(59, 130, 246, 0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
+        background-size: 60px 60px;
+        mask-image: radial-gradient(circle at center, black, transparent 85%);
     }
     
     .data-stream {
         position: absolute;
         width: 2px;
-        height: 100px;
-        background: linear-gradient(to bottom, transparent, rgba(239, 68, 68, 0.8), transparent);
+        height: 120px;
+        background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.5), transparent);
         animation: data-stream 3s linear infinite;
+    }
+    
+    .data-stream:nth-child(odd) {
+        background: linear-gradient(to bottom, transparent, rgba(239, 68, 68, 0.5), transparent);
     }
     
     .pulse-ring {
         position: absolute;
-        border: 2px solid rgba(239, 68, 68, 0.6);
+        border: 3px solid rgba(59, 130, 246, 0.3);
         border-radius: 50%;
         animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     
+    .pulse-ring:nth-child(2) {
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+    
+    .pulse-ring:nth-child(3) {
+        border-color: rgba(168, 85, 247, 0.3);
+    }
+    
+    /* Glossy Tech Cards */
     .tech-card {
-        backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        background: linear-gradient(135deg, 
+            rgba(245, 245, 243, 0.9) 0%,
+            rgba(245, 245, 244, 0.7) 100%
+        );
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
+    
+
     .tech-card:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(239, 68, 68, 0.5);
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 0.9) 100%
+        );
+        border-color: rgba(59, 130, 246, 0.8);
         transform: translateY(-8px);
+        box-shadow: 
+            0 20px 60px rgba(59, 130, 246, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
     }
     
+    /* Updated Text Gradient - More Vibrant */
     .text-gradient-red {
-        background: linear-gradient(135deg, #ef4444 0%, #ffffff 50%, #ef4444 100%);
+        background: linear-gradient(135deg, 
+            #ef4444 0%, 
+            #f97316 25%,
+            #0ee7a6 50%, 
+            #8b5cf6 75%,
+            #ec4899 100%
+        );
         background-size: 200% 200%;
         -webkit-background-clip: text;
         background-clip: text;
@@ -156,10 +202,14 @@
         transform: translateY(-5px);
     }
     
+    /* Updated Primary Button - Glossy */
     .btn-primary {
         position: relative;
         overflow: hidden;
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+        box-shadow: 
+            0 10px 25px rgba(239, 68, 68, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
     }
     
@@ -170,8 +220,19 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
         transition: left 0.5s ease;
+    }
+    
+    .btn-primary::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+        border-radius: 0.5rem 0.5rem 0 0;
     }
     
     .btn-primary:hover::before {
@@ -179,40 +240,80 @@
     }
     
     .btn-primary:hover {
-        box-shadow: 0 10px 40px rgba(239, 68, 68, 0.4);
+        box-shadow: 
+            0 15px 40px rgba(239, 68, 68, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
         transform: translateY(-2px);
     }
     
     .orbit-container {
-        position: relative;
-        width: 200px;
-        height: 200px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
     }
     
     .orbit-item {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 40px;
-        height: 40px;
-        margin: -20px 0 0 -20px;
+        width: 56px;
+        height: 56px;
+        margin: -28px 0 0 -28px;
         animation: orbit 20s linear infinite;
     }
     
+    .orbit-item:nth-child(1) { animation-delay: 0s; }
     .orbit-item:nth-child(2) { animation-delay: -5s; }
     .orbit-item:nth-child(3) { animation-delay: -10s; }
     .orbit-item:nth-child(4) { animation-delay: -15s; }
     
+    /* Updated Center Code Icon - More Vibrant */
+    .code-icon-center {
+        background: linear-gradient(135deg, 
+            #ef4444 0%, 
+            #f97316 25%,
+            #0ee7a6 50%, 
+            #8b5cf6 75%,
+            #ec4899 100%
+        );
+        background-size: 200% 200%;
+        box-shadow: 
+            0 0 60px rgba(239, 68, 68, 0.6),
+            0 0 100px rgba(59, 130, 246, 0.4),
+            0 0 140px rgba(168, 85, 247, 0.3),
+            inset 0 1px 40px rgba(255, 255, 255, 0.3);
+        animation: tech-pulse 3s ease-in-out infinite, gradient-shift 5s ease infinite;
+        border: 3px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Updated Stats Cards - Glossy */
     .stats-card {
-        backdrop-filter: blur(10px);
-        background: rgba(15, 15, 15, 0.6);
-        border: 1px solid rgba(239, 68, 68, 0.2);
+        backdrop-filter: blur(16px);
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(255, 255, 255, 0.85) 100%
+        );
+        border: 2px solid rgba(59, 130, 246, 0.3);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
         transition: all 0.3s ease;
     }
     
     .stats-card:hover {
-        border-color: rgba(239, 68, 68, 0.6);
-        box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+        border-color: rgba(59, 130, 246, 0.6);
+        box-shadow: 
+            0 12px 40px rgba(59, 130, 246, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 0.95) 100%
+        );
+        transform: translateY(-2px);
     }
     
     @keyframes scroll-hint {
@@ -222,6 +323,70 @@
     
     .scroll-hint {
         animation: scroll-hint 2s ease-in-out infinite;
+    }
+    
+    /* Updated Floating Cards - More Glossy */
+    .floating-card {
+        backdrop-filter: blur(20px);
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(255, 255, 255, 0.85) 100%
+        );
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 
+            0 15px 45px rgba(0, 0, 0, 0.15),
+            inset 0 2px 0 rgba(255, 255, 255, 1);
+    }
+    
+    /* Text colors for better visibility */
+    .hero-text-primary {
+        color: #1e293b;
+        text-shadow: 0 2px 20px rgba(255, 255, 255, 0.8);
+    }
+    
+    .hero-text-secondary {
+        color: #334155;
+        text-shadow: 0 1px 10px rgba(255, 255, 255, 0.6);
+    }
+    
+    /* Badge styling */
+    .hero-badge {
+        background: linear-gradient(135deg, 
+            rgba(59, 130, 246, 0.2) 0%,
+            rgba(59, 130, 246, 0.1) 100%
+        );
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(59, 130, 246, 0.4);
+        box-shadow: 
+            0 4px 16px rgba(59, 130, 246, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        margin-top: 40px;
+    }
+    
+    /* Secondary button styling */
+    .btn-secondary {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(255, 255, 255, 0.85) 100%
+        );
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(71, 85, 105, 0.4);
+        color: #1e293b;
+        box-shadow: 
+            0 8px 24px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 0.95) 100%
+        );
+        border-color: rgba(59, 130, 246, 0.6);
+        box-shadow: 
+            0 12px 32px rgba(59, 130, 246, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
     }
 </style>
 {% endblock %}
@@ -249,26 +414,26 @@
                 <!-- Main Heading -->
                 <div class="space-y-4">
                     <div class="slide-in-left" style="animation-delay: 0.2s;">
-                        <span class="inline-block px-4 py-2 bg-red-500/20 text-red-400 rounded-full text-sm font-semibold border border-red-500/30 mb-4">
+                        <span class="hero-badge inline-block px-5 py-2.5 text-blue-700 rounded-full text-sm font-bold mb-4">
                             🚀 Next-Gen Technology Solutions
                         </span>
                     </div>
                     
                     <h1 class="slide-in-left" style="animation-delay: 0.4s;">
-                        <span class="block text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2">
+                        <span class="block text-5xl md:text-6xl lg:text-7xl font-bold hero-text-primary mb-2">
                             Build The
                         </span>
                         <span class="block text-5xl md:text-6xl lg:text-7xl font-bold text-gradient-red mb-2">
                             Future
                         </span>
-                        <span class="block text-5xl md:text-6xl lg:text-7xl font-bold text-white">
+                        <span class="block text-5xl md:text-6xl lg:text-7xl font-bold hero-text-primary">
                             With Code
                         </span>
                     </h1>
                 </div>
                 
                 <!-- Description -->
-                <p class="slide-in-left text-lg md:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto lg:mx-0" style="animation-delay: 0.6s;">
+                <p class="slide-in-left text-lg md:text-xl hero-text-secondary leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium" style="animation-delay: 0.6s;">
                     Transform your business with cutting-edge software solutions. We craft scalable, innovative applications that drive growth and exceed expectations.
                 </p>
                 
@@ -276,11 +441,11 @@
                 <div class="fade-in-up flex flex-col sm:flex-row gap-4 justify-center lg:justify-start" style="animation-delay: 0.8s;">
                     <a href="{% url 'contact' %}" class="btn-primary px-8 py-4 text-white font-semibold rounded-lg hover-lift inline-flex items-center justify-center group">
                         <span class="relative z-10">Start Your Project</span>
-                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                         </svg>
                     </a>
-                    <a href="{% url 'services' %}" class="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover-lift inline-flex items-center justify-center">
+                    <a href="{% url 'services' %}" class="btn-secondary px-8 py-4 font-semibold rounded-lg hover-lift inline-flex items-center justify-center">
                         View Services
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -291,16 +456,16 @@
                 <!-- Stats -->
                 <div class="fade-in-up grid grid-cols-3 gap-4 pt-8" style="animation-delay: 1s;">
                     <div class="stats-card rounded-xl p-4 text-center">
-                        <div class="text-3xl md:text-4xl font-bold text-red-500 mb-1">100+</div>
-                        <div class="text-xs md:text-sm text-gray-400">Projects</div>
+                        <div class="text-3xl md:text-4xl font-bold text-green-600 mb-1">100+</div>
+                        <div class="text-xs md:text-sm text-gray-700 font-medium">Projects</div>
                     </div>
                     <div class="stats-card rounded-xl p-4 text-center">
-                        <div class="text-3xl md:text-4xl font-bold text-white mb-1">50+</div>
-                        <div class="text-xs md:text-sm text-gray-400">Clients</div>
+                        <div class="text-3xl md:text-4xl font-bold text-red-600 mb-1">50+</div>
+                        <div class="text-xs md:text-sm text-gray-700 font-medium">Clients</div>
                     </div>
                     <div class="stats-card rounded-xl p-4 text-center">
-                        <div class="text-3xl md:text-4xl font-bold text-red-500 mb-1">5+</div>
-                        <div class="text-xs md:text-sm text-gray-400">Years</div>
+                        <div class="text-3xl md:text-4xl font-bold text-purple-600 mb-1">5+</div>
+                        <div class="text-xs md:text-sm text-gray-700 font-medium">Years</div>
                     </div>
                 </div>
             </div>
@@ -308,71 +473,73 @@
             <!-- Hero Visual -->
             <div class="slide-in-right relative flex items-center justify-center" style="animation-delay: 0.4s;">
                 <!-- Central Tech Hub -->
-                <div class="relative">
-                    <!-- Main Circle -->
-                    <div class="relative w-80 h-80 md:w-96 md:h-96">
-                        <!-- Pulse Rings -->
-                        <div class="pulse-ring w-full h-full" style="animation-delay: 0s;"></div>
-                        <div class="pulse-ring w-full h-full" style="animation-delay: 1s;"></div>
-                        <div class="pulse-ring w-full h-full" style="animation-delay: 2s;"></div>
-                        
-                        <!-- Center Core -->
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-40 h-40 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center shadow-2xl" style="animation: tech-pulse 3s ease-in-out infinite;">
-                                <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                <div class="relative w-80 h-80 md:w-96 md:h-96">
+                    <!-- Pulse Rings -->
+                    <div class="pulse-ring w-full h-full absolute inset-0" style="animation-delay: 0s;"></div>
+                    <div class="pulse-ring w-full h-full absolute inset-0" style="animation-delay: 1s;"></div>
+                    <div class="pulse-ring w-full h-full absolute inset-0" style="animation-delay: 2s;"></div>
+                    
+                    <!-- Center Core with Code Icon -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="code-icon-center w-40 h-40 rounded-full flex items-center justify-center shadow-2xl">
+                            <svg class="w-20 h-20 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Orbiting Tech Icons -->
+                    <div class="orbit-container">
+                        <div class="orbit-item">
+                            <div class="tech-card w-14 h-14 rounded-xl flex items-center justify-center ">
+                                <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
                             </div>
                         </div>
-                        
-                        <!-- Orbiting Tech Icons -->
-                        <div class="orbit-container absolute inset-0">
-                            <div class="orbit-item">
-                                <div class="tech-card w-12 h-12 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                    </svg>
-                                </div>
+                        <div class="orbit-item">
+                            <div class="tech-card w-14 h-14 rounded-xl flex items-center justify-center">
+                                <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
                             </div>
-                            <div class="orbit-item">
-                                <div class="tech-card w-12 h-12 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                    </svg>
-                                </div>
+                        </div>
+                        <div class="orbit-item">
+                            <div class="tech-card w-14 h-14 rounded-xl flex items-center justify-center">
+                                <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
                             </div>
-                            <div class="orbit-item">
-                                <div class="tech-card w-12 h-12 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="orbit-item">
-                                <div class="tech-card w-12 h-12 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
-                                    </svg>
-                                </div>
+                        </div>
+                        <div class="orbit-item">
+                            <div class="tech-card w-14 h-14 rounded-xl flex items-center justify-center">
+                                <svg class="w-7 h-7 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                                </svg>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Floating Tech Cards -->
-                    <div class="absolute -top-10 -right-10 tech-card rounded-xl p-4 backdrop-blur-md" style="animation: float 6s ease-in-out infinite;">
-                        <div class="text-2xl font-bold text-red-400">99%</div>
-                        <div class="text-xs text-gray-400 mt-1">Success Rate</div>
+                    <div class="absolute -top-10 -right-10 floating-card rounded-xl p-5 shadow-xl" style="animation: float 6s ease-in-out infinite;">
+                        <div class="text-2xl font-bold text-blue-600">99%</div>
+                        <div class="text-xs text-gray-700 mt-1 font-semibold">Success Rate</div>
                     </div>
                     
-                    <div class="absolute -bottom-10 -left-10 tech-card rounded-xl p-4 backdrop-blur-md" style="animation: float 6s ease-in-out infinite; animation-delay: -3s;">
-                        <div class="text-2xl font-bold text-white">24/7</div>
-                        <div class="text-xs text-gray-400 mt-1">Support</div>
+                    <div class="absolute -bottom-10 -left-10 floating-card rounded-xl p-5 shadow-xl" style="animation: float 6s ease-in-out infinite; animation-delay: -3s;">
+                        <div class="text-2xl font-bold text-purple-600">24/7</div>
+                        <div class="text-xs text-gray-700 mt-1 font-semibold">Support</div>
                     </div>
                     
-                    <div class="absolute top-1/2 -right-20 tech-card rounded-xl p-4 backdrop-blur-md" style="animation: float 6s ease-in-out infinite; animation-delay: -1.5s;">
-                        <div class="text-2xl font-bold text-red-400">Fast</div>
-                        <div class="text-xs text-gray-400 mt-1">Delivery</div>
+                    <div class="absolute top-1/2 -right-20 floating-card rounded-xl p-5 shadow-xl" style="animation: float 6s ease-in-out infinite; animation-delay: -1.5s;">
+                        <div class="text-2xl font-bold text-red-600">Fast</div>
+                        <div class="text-xs text-gray-700 mt-1 font-semibold">Delivery</div>
                     </div>
+                    <div class="absolute -top-10 -left-10 floating-card rounded-xl p-5 shadow-xl" style="animation: float 6s ease-in-out infinite;">
+                        <div class="text-2xl font-bold text-blue-600">Unique</div>
+                        <div class="text-xs text-gray-700 mt-1 font-semibold">Unique designs</div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -381,8 +548,8 @@
     <!-- Scroll Indicator -->
     <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 scroll-hint">
         <div class="flex flex-col items-center">
-            <span class="text-gray-400 text-sm mb-2">Scroll to explore</span>
-            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="text-gray-700 text-sm mb-2 font-medium">Scroll to explore</span>
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
             </svg>
         </div>
@@ -769,4 +936,4 @@
         }
     });
 </script>
-{% endblock %}
+{% endblock %}  

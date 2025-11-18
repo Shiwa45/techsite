@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Unified Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            /* --- Default: LIGHT THEME --- */
+            --primary: #2563eb;       /* Royal Blue */
+            --secondary: #7c3aed;     /* Violet */
+            --bg-color: #f1f5f9;      /* Slate 100 */
+            --text-main: #0f172a;     /* Slate 900 */
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --grid-color: rgba(0, 0, 0, 0.03);
+            --nav-text: #475569;
+            --card-hover-text: #0f172a;
+        }
+
+        [data-theme="dark"] {
+            /* --- Dark Mode Overrides --- */
+            --primary: #00f3ff;       /* Cyan */
+            --secondary: #bc13fe;     /* Neon Purple */
+            --bg-color: #050505;      /* Deep Black */
+            --text-main: #ffffff;     /* White */
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --grid-color: rgba(0, 243, 255, 0.03);
+            --nav-text: #94a3b8;
+            --card-hover-text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            cursor: none;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--primary);
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+        }
+
+        body:hover .cursor-outline { opacity: 1; }
+
+        /* Typography */
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
+
+        /* Glitch Effect */
+        .glitch-wrapper { position: relative; display: inline-block; }
+        .glitch { position: relative; color: var(--text-main); transition: color 0.5s; }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            width: 100%;
+            background: var(--bg-color); /* Matches BG to hide */
+            clip: rect(0, 0, 0, 0);
+            transition: background-color 0.5s;
+        }
+        .glitch::before {
+            left: -2px;
+            text-shadow: 2px 0 var(--secondary);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: 2px;
+            text-shadow: -2px 0 var(--primary);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(20px, 9999px, 10px, 0); }
+            100% { clip: rect(70px, 9999px, 80px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(60px, 9999px, 70px, 0); }
+            100% { clip: rect(20px, 9999px, 10px, 0); }
+        }
+
+        /* Utilities */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: background-color 0.5s, border-color 0.3s;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: -1; opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Theme Toggle Switch */
+        .theme-switch {
+            position: fixed;
+            top: 24px;
+            right: 24px; /* Mobile positioning */
+            z-index: 100;
+            width: 50px;
+            height: 26px;
+            background: rgba(0,0,0,0.1);
+            border: 1px solid var(--primary);
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        [data-theme="dark"] .theme-switch {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .switch-knob {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translateX(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+        }
+
+        [data-theme="dark"] .switch-knob {
+            transform: translateX(24px);
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-color);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: background-color 0.5s;
+        }
+        
+        .loader-bar {
+            width: 200px; height: 2px;
+            background: rgba(100,100,100,0.2);
+            margin-top: 20px; position: relative; overflow: hidden;
+        }
+        .loader-progress {
+            position: absolute; top: 0; left: 0; height: 100%; width: 0%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Grid Overlay */
+        .grid-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1; pointer-events: none;
+            transition: background-image 0.5s;
+        }
+        
+        @media (min-width: 768px) {
+            .theme-switch {
+                right: 40px; /* Desktop positioning */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-switch hover-trigger" id="theme-toggle">
+        <div class="switch-knob">
+            <!-- Icons handled by JS or simple CSS content -->
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader">
+        <div class="text-4xl font-bold tracking-[0.5em] text-[var(--text-main)] transition-colors duration-500" id="loader-text">INITIALIZING</div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+        <div class="mt-2 text-xs text-gray-400 font-mono" id="loader-percent">0%</div>
+    </div>
+
+    <div id="canvas-container"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 px-6 py-4 flex justify-between items-center">
+        <div class="text-2xl font-bold tracking-widest text-[var(--text-main)] cursor-pointer hover-trigger transition-colors duration-500" data-text="NEXUS">NEXUS</div>
+        <div class="hidden md:flex space-x-8 text-sm font-bold tracking-widest text-[var(--nav-text)] transition-colors duration-500">
+            <a href="#hero" class="hover:text-[var(--primary)] transition-colors hover-trigger">HOME</a>
+            <a href="#features" class="hover:text-[var(--primary)] transition-colors hover-trigger">SOLUTIONS</a>
+            <a href="#tech" class="hover:text-[var(--primary)] transition-colors hover-trigger">TECHNOLOGY</a>
+            <a href="#contact" class="text-[var(--primary)] hover:text-[var(--secondary)] transition-colors hover-trigger">[ ACCESS ]</a>
+        </div>
+        <!-- Spacer for toggle button on desktop -->
+        <div class="w-12 hidden md:block"></div> 
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="h-screen w-full flex items-center justify-center relative px-4 overflow-hidden">
+            <div class="text-center z-10 max-w-4xl">
+                <div class="overflow-hidden mb-4">
+                    <p class="hero-subtitle text-[var(--primary)] tracking-[0.3em] text-sm md:text-base font-bold uppercase translate-y-full transition-colors duration-500">
+                        System Online // V.4.0.2
+                    </p>
+                </div>
+                
+                <div class="glitch-wrapper mb-6">
+                    <h1 class="glitch hero-title text-6xl md:text-9xl font-black text-[var(--text-main)] leading-tight transition-colors duration-500" data-text="REDEFINE REALITY">
+                        REDEFINE<br>REALITY
+                    </h1>
+                </div>
+
+                <p class="hero-desc text-[var(--nav-text)] text-lg md:text-xl max-w-2xl mx-auto mb-10 opacity-0 translate-y-10 transition-colors duration-500">
+                    We build the digital infrastructure for the next century. Quantum computing interfaces meets immersive neural networks.
+                </p>
+
+                <div class="hero-btns flex flex-col md:flex-row gap-4 justify-center opacity-0 translate-y-10">
+                    <button class="btn-magnetic group relative px-8 py-4 bg-transparent border border-[var(--primary)] overflow-hidden hover-trigger">
+                        <div class="absolute inset-0 w-full h-full bg-[var(--primary)] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                        <span class="relative group-hover:text-[var(--bg-color)] text-[var(--primary)] font-bold tracking-widest transition-colors duration-300">EXPLORE SYSTEM</span>
+                    </button>
+                    <button class="btn-magnetic group relative px-8 py-4 bg-[var(--glass-bg)] border border-[var(--glass-border)] hover:border-[var(--text-main)] hover-trigger backdrop-blur-sm transition-all duration-300">
+                        <span class="font-bold tracking-widest text-[var(--text-main)] transition-colors duration-500">VIEW DEMO</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce">
+                <span class="text-[10px] tracking-widest text-[var(--nav-text)]">SCROLL</span>
+                <div class="w-[1px] h-12 bg-gradient-to-b from-[var(--primary)] to-transparent"></div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="py-20 border-y border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-sm relative z-20 transition-colors duration-500">
+            <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="stat-item">
+                    <h3 class="text-4xl md:text-6xl font-bold text-[var(--text-main)] mb-2 transition-colors duration-500"><span class="counter" data-target="99">0</span>%</h3>
+                    <p class="text-xs tracking-widest text-[var(--nav-text)]">UPTIME</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="text-4xl md:text-6xl font-bold text-[var(--text-main)] mb-2 transition-colors duration-500"><span class="counter" data-target="840">0</span>+</h3>
+                    <p class="text-xs tracking-widest text-[var(--nav-text)]">NODES ACTIVE</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="text-4xl md:text-6xl font-bold text-[var(--text-main)] mb-2 transition-colors duration-500"><span class="counter" data-target="12">0</span>ms</h3>
+                    <p class="text-xs tracking-widest text-[var(--nav-text)]">LATENCY</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="text-4xl md:text-6xl font-bold text-[var(--text-main)] mb-2 transition-colors duration-500">24/7</h3>
+                    <p class="text-xs tracking-widest text-[var(--nav-text)]">MONITORING</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-32 relative z-10">
+            <div class="container mx-auto px-6">
+                <div class="mb-20">
+                    <h2 class="section-title text-5xl md:text-7xl font-bold mb-4 text-[var(--text-main)] transition-colors duration-500">CORE MODULES</h2>
+                    <div class="w-24 h-1 bg-[var(--primary)]"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="feature-card glass-panel p-8 rounded-none hover:border-[var(--primary)] transition-all duration-300 group hover-trigger relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-[var(--text-main)] group-hover:opacity-5 transition-all">01</div>
+                        <div class="w-12 h-12 rounded-full border border-[var(--primary)] flex items-center justify-center mb-6 group-hover:bg-[var(--primary)] group-hover:text-[var(--bg-color)] text-[var(--primary)] transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-[var(--text-main)] group-hover:text-[var(--primary)] transition-colors">Neural Synthesis</h3>
+                        <p class="text-[var(--nav-text)] leading-relaxed">AI-driven algorithms that adapt to your data streams in real-time, optimizing output efficiency by 400%.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="feature-card glass-panel p-8 rounded-none hover:border-[var(--secondary)] transition-all duration-300 group hover-trigger relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-[var(--text-main)] group-hover:opacity-5 transition-all">02</div>
+                        <div class="w-12 h-12 rounded-full border border-[var(--secondary)] flex items-center justify-center mb-6 group-hover:bg-[var(--secondary)] group-hover:text-[var(--bg-color)] text-[var(--secondary)] transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-[var(--text-main)] group-hover:text-[var(--secondary)] transition-colors">Quantum Encryption</h3>
+                        <p class="text-[var(--nav-text)] leading-relaxed">Post-quantum cryptography standards ensuring your data remains secure against next-gen computing threats.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="feature-card glass-panel p-8 rounded-none hover:border-[var(--primary)] transition-all duration-300 group hover-trigger relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl font-bold text-[var(--text-main)] group-hover:opacity-5 transition-all">03</div>
+                        <div class="w-12 h-12 rounded-full border border-[var(--primary)] flex items-center justify-center mb-6 group-hover:bg-[var(--primary)] group-hover:text-[var(--bg-color)] text-[var(--primary)] transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-[var(--text-main)] group-hover:text-[var(--primary)] transition-colors">Hyper-Speed Grid</h3>
+                        <p class="text-[var(--nav-text)] leading-relaxed">Decentralized processing power distributed across a global mesh network for zero-latency operations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Immersion Section -->
+        <section class="py-20 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[var(--primary)] opacity-[0.03]"></div>
+            <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+                <div class="w-full md:w-1/2">
+                    <div class="relative aspect-video border border-[var(--glass-border)] bg-[var(--glass-bg)] overflow-hidden group hover-trigger shadow-xl transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg-color)] via-transparent to-transparent z-10"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 border-2 border-[var(--primary)] rounded-full animate-ping opacity-20"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-[var(--secondary)] rounded-full animate-spin"></div>
+                        <div class="absolute bottom-4 left-4 text-[10px] font-mono text-[var(--primary)] z-20">System_Status: ACTIVE</div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 text-[var(--text-main)] transition-colors duration-500">IMMERSIVE <span class="text-[var(--secondary)]">ARCHITECTURES</span></h2>
+                    <p class="text-[var(--nav-text)] mb-8 text-lg transition-colors duration-500">
+                        The boundary between physical and digital is dissolving. Nexus provides the bridge.
+                    </p>
+                    <ul class="space-y-4 font-mono text-sm text-[var(--nav-text)]">
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 bg-[var(--primary)]"></span>
+                            <span>Holographic Interface Protocols</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 bg-[var(--secondary)]"></span>
+                            <span>Biometric Data Feedback Loops</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 bg-[var(--text-main)]"></span>
+                            <span>Autonomous Agent Deployment</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-32 relative text-center">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--bg-color)] z-0"></div>
+            <div class="relative z-10 container mx-auto px-6">
+                <h2 class="text-5xl md:text-8xl font-bold mb-8 tracking-tighter text-[var(--text-main)] transition-colors duration-500">READY TO <br><span class="gradient-text">ASCEND?</span></h2>
+                <p class="text-[var(--nav-text)] max-w-xl mx-auto mb-10 transition-colors duration-500">Join the 4,000+ organizations already building on the Nexus protocol.</p>
+                <button class="hover-trigger px-12 py-5 bg-[var(--text-main)] text-[var(--bg-color)] font-bold tracking-widest hover:bg-[var(--primary)] hover:scale-105 transition-all duration-300 clip-path-polygon shadow-xl">
+                    INITIALIZE SEQUENCE
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-[var(--glass-border)] py-12 bg-[var(--bg-color)] text-center md:text-left transition-colors duration-500">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0">
+                <h4 class="text-2xl font-bold tracking-widest mb-2 text-[var(--text-main)] transition-colors duration-500">NEXUS</h4>
+                <p class="text-[var(--nav-text)] text-xs font-mono">© 2099 NEXUS SYSTEMS INC.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-[var(--nav-text)] hover:text-[var(--primary)] transition-colors">TWITTER</a>
+                <a href="#" class="text-[var(--nav-text)] hover:text-[var(--primary)] transition-colors">GITHUB</a>
+                <a href="#" class="text-[var(--nav-text)] hover:text-[var(--primary)] transition-colors">DISCORD</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Theme Management & Toggle Logic ---
+        const toggleBtn = document.getElementById('theme-toggle');
+        const switchKnob = document.querySelector('.switch-knob');
+        
+        // Colors for JS access (Three.js needs hex integers)
+        const themeColors = {
+            light: {
+                fog: 0xf1f5f9,
+                particles: 0x0f172a
+            },
+            dark: {
+                fog: 0x050505,
+                particles: 0x00f3ff
+            }
+        };
+
+        let isDarkMode = false;
+
+        toggleBtn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            
+            // 1. Update DOM Attribute
+            document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            
+            // 2. Update Toggle UI
+            switchKnob.innerHTML = isDarkMode ? '☾' : '☀';
+            
+            // 3. Update Three.js Scene (if initialized)
+            if(window.updateTheme3D) {
+                window.updateTheme3D(isDarkMode ? themeColors.dark : themeColors.light);
+            }
+        });
+
+        // Set Initial Icon
+        switchKnob.innerHTML = '☀';
+
+
+        // --- 2. Custom Cursor Logic ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        document.body.addEventListener('mouseover', (e) => {
+            if(e.target.closest('.hover-trigger')) {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.backgroundColor = 'rgba(37, 99, 235, 0.1)'; // Default blue tint
+                cursorOutline.style.borderColor = 'transparent';
+            } else {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.backgroundColor = 'transparent';
+                cursorOutline.style.borderColor = 'var(--primary)';
+            }
+        });
+
+
+        // --- 3. Three.js Background Animation ---
+        const initThreeJS = () => {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            
+            // Initial State: Light
+            scene.fog = new THREE.FogExp2(themeColors.light.fog, 0.002);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 20;
+            camera.position.y = 5;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Create Particle Terrain
+            const geometry = new THREE.PlaneGeometry(100, 100, 60, 60);
+            const count = geometry.attributes.position.count;
+            
+            const material = new THREE.PointsMaterial({
+                color: themeColors.light.particles,
+                size: 0.12,
+                transparent: true,
+                opacity: 0.6
+            });
+
+            const points = new THREE.Points(geometry, material);
+            points.rotation.x = -Math.PI / 2;
+            scene.add(points);
+
+            // Expose update function to global scope for the toggle button
+            window.updateTheme3D = (colors) => {
+                gsap.to(scene.fog, {
+                    color: new THREE.Color(colors.fog),
+                    duration: 0.5
+                });
+                gsap.to(material.color, {
+                    r: new THREE.Color(colors.particles).r,
+                    g: new THREE.Color(colors.particles).g,
+                    b: new THREE.Color(colors.particles).b,
+                    duration: 0.5
+                });
+                
+                // Optional: Adjust Material opacity based on theme for visibility
+                // Dark mode particles look better slightly brighter
+                if(colors === themeColors.dark) {
+                   material.opacity = 0.8;
+                   material.size = 0.15;
+                } else {
+                   material.opacity = 0.6;
+                   material.size = 0.12;
+                }
+            };
+
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetX = 0;
+            let targetY = 0;
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX - windowHalfX);
+                mouseY = (event.clientY - windowHalfY);
+            });
+
+            const clock = new THREE.Clock();
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+
+                const positions = geometry.attributes.position.array;
+                for(let i = 0; i < count; i++) {
+                    const x = positions[i * 3]; 
+                    positions[i * 3 + 2] = Math.sin(elapsedTime * 1.5 + x * 0.2) * 2 + Math.cos(elapsedTime * 0.5 + positions[i*3+1] * 0.3) * 2; 
+                }
+                geometry.attributes.position.needsUpdate = true;
+
+                targetX = mouseX * 0.001;
+                targetY = mouseY * 0.001;
+
+                points.rotation.y += 0.05 * (targetX - points.rotation.y);
+                points.rotation.x += 0.05 * (-targetY - Math.PI / 2 - points.rotation.x);
+
+                renderer.render(scene, camera);
+            };
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+
+        // --- 4. GSAP Animations & Loading Sequence ---
+        
+        gsap.registerPlugin(ScrollTrigger);
+
+        const runLoader = () => {
+            const progress = document.querySelector('.loader-progress');
+            const percentText = document.getElementById('loader-percent');
+            const loader = document.getElementById('loader');
+            const canvasContainer = document.getElementById('canvas-container');
+
+            let tl = gsap.timeline({
+                onComplete: () => {
+                    gsap.to(loader, {
+                        yPercent: -100,
+                        duration: 0.8,
+                        ease: "power4.inOut"
+                    });
+                    
+                    gsap.to(canvasContainer, {opacity: 1, duration: 1});
+                    initHeroAnimations();
+                }
+            });
+
+            tl.to(progress, {
+                width: "100%",
+                duration: 2,
+                ease: "power2.inOut",
+                onUpdate: function() {
+                    percentText.innerHTML = Math.round(this.progress() * 100) + "%";
+                }
+            });
+            
+            const scrambleChars = "!<>-_\\/[]{}—=+*^?#________";
+            const textElement = document.getElementById('loader-text');
+            const originalText = textElement.innerText;
+            
+            let scrambleInterval = setInterval(() => {
+                textElement.innerText = originalText.split('')
+                    .map((char, index) => {
+                        if(index < originalText.length * tl.progress()) return char;
+                        return scrambleChars[Math.floor(Math.random() * scrambleChars.length)]
+                    })
+                    .join('');
+            }, 50);
+
+            tl.eventCallback("onComplete", () => {
+                clearInterval(scrambleInterval);
+                textElement.innerText = originalText;
+                gsap.to(loader, { yPercent: -100, duration: 0.8, ease: "power4.inOut" });
+                gsap.to(canvasContainer, {opacity: 1, duration: 1});
+                initHeroAnimations();
+            });
+        };
+
+        const initHeroAnimations = () => {
+            const tl = gsap.timeline();
+
+            tl.to('.hero-subtitle', {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "power3.out"
+            })
+            .from('.hero-title', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out",
+                stagger: 0.1
+            }, "-=0.4")
+            .to('.hero-desc', {
+                y: 0,
+                opacity: 1,
+                duration: 0.8
+                
+            }, "-=0.6")
+            .to('.hero-btns', {
+                y: 0,
+                opacity: 1,
+                duration: 0.8
+            }, "-=0.6");
+        };
+
+        const initMagneticButtons = () => {
+            const buttons = document.querySelectorAll('.btn-magnetic');
+            
+            buttons.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    gsap.to(btn, {
+                        x: x * 0.2,
+                        y: y * 0.2,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    gsap.to(btn, {
+                        x: 0,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "elastic.out(1, 0.3)"
+                    });
+                });
+            });
+        };
+
+        const initScrollAnimations = () => {
+            const stats = document.querySelectorAll('.counter');
+            stats.forEach(stat => {
+                let target = +stat.getAttribute('data-target');
+                ScrollTrigger.create({
+                    trigger: stat,
+                    start: "top 85%",
+                    once: true,
+                    onEnter: () => {
+                        gsap.to(stat, {
+                            innerText: target,
+                            duration: 2,
+                            snap: { innerText: 1 }, 
+                            ease: "power2.out"
+                        });
+                    }
+                });
+            });
+
+            gsap.from('.feature-card', {
+                scrollTrigger: {
+                    trigger: '#features',
+                    start: "top 70%"
+                },
+                y: 100,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+
+            gsap.utils.toArray('.section-title').forEach(title => {
+                gsap.from(title, {
+                    scrollTrigger: {
+                        trigger: title,
+                        start: "top 80%"
+                    },
+                    x: -50,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power3.out"
+                });
+            });
+        };
+
+        window.addEventListener('load', () => {
+            initThreeJS();
+            initMagneticButtons();
+            initScrollAnimations();
+            runLoader(); 
+        });
+
+    </script>
+</body>
+</html>
