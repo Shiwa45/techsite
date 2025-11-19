@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNova - Hyper-Animated Soft Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-soft: #818cf8;
+            --secondary-soft: #c084fc;
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --surface-color: #f8fafc;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--surface-color);
+            overflow-x: hidden;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+        .loader-blob {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #818cf8, #c084fc);
+            border-radius: 50%;
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.33); opacity: 1; }
+            80%, 100% { transform: scale(1); opacity: 0; }
+        }
+
+        /* --- KEYFRAMES --- */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        @keyframes float-reverse {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(15px) rotate(-2deg); }
+        }
+        .animate-float-reverse { animation: float-reverse 7s ease-in-out infinite; }
+
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob { animation: blob 10s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+
+        @keyframes gradient-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animate-gradient-text {
+            background-size: 200% auto;
+            animation: gradient-text 4s linear infinite;
+        }
+
+        /* --- GLASSMORPHISM & UI --- */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(31, 38, 135, 0.15);
+            border-color: #a5b4fc;
+        }
+
+        /* --- ADVANCED SCROLL REVEAL ANIMATIONS --- */
+        .reveal-base {
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        /* Fade Up */
+        .reveal-up { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+        
+        /* Slide In From Left */
+        .reveal-slide-left { opacity: 0; transform: translateX(-100px); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        
+        /* Slide In From Right */
+        .reveal-slide-right { opacity: 0; transform: translateX(100px); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        
+        /* Zoom In */
+        .reveal-zoom { opacity: 0; transform: scale(0.8); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        
+        /* Rotate In */
+        .reveal-rotate-left { opacity: 0; transform: rotate(-15deg) translateY(50px); transition: all 1s ease-out; }
+        .reveal-rotate-right { opacity: 0; transform: rotate(15deg) translateY(50px); transition: all 1s ease-out; }
+
+        /* Active State */
+        .active { opacity: 1; transform: translate(0) scale(1) rotate(0); }
+
+        /* Stagger delays */
+        .stagger-1 { transition-delay: 100ms; }
+        .stagger-2 { transition-delay: 200ms; }
+        .stagger-3 { transition-delay: 300ms; }
+        .stagger-4 { transition-delay: 400ms; }
+
+        /* --- MARQUEE --- */
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee { animation: marquee 40s linear infinite; }
+        .hover-pause:hover { animation-play-state: paused; }
+    </style>
+</head>
+<body class="antialiased text-slate-800 selection:bg-indigo-200 selection:text-indigo-900">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-blob"></div>
+    </div>
+
+    <!-- Background Blobs -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-[600px] h-[600px] bg-indigo-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob"></div>
+        <div class="absolute top-0 right-1/4 w-[600px] h-[600px] bg-purple-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-32 left-1/3 w-[600px] h-[600px] bg-pink-200 rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass rounded-2xl px-6 py-3 flex justify-between items-center shadow-sm">
+                <!-- Logo -->
+                <div class="flex items-center gap-2 group cursor-pointer">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-200"></div>
+                        <div class="relative bg-white p-2 rounded-lg">
+                            <i data-lucide="zap" class="w-5 h-5 text-indigo-600 group-hover:text-purple-600 transition-colors"></i>
+                        </div>
+                    </div>
+                    <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600">TechNova</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-sm font-medium text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all">Features</a>
+                    <a href="#services" class="text-sm font-medium text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all">Services</a>
+                    <a href="#pricing" class="text-sm font-medium text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all">Pricing</a>
+                    <a href="#team" class="text-sm font-medium text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all">Team</a>
+                    <button class="bg-slate-900 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2 group">
+                        Get Started <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Toggle -->
+                <button id="mobile-menu-btn" class="md:hidden text-slate-700 p-2 hover:bg-slate-100 rounded-lg transition">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full px-4 mt-2">
+            <div class="glass rounded-2xl p-4 flex flex-col space-y-3 shadow-lg animate-float-reverse">
+                <a href="#features" class="block px-4 py-2 rounded-lg hover:bg-indigo-50 text-slate-700 font-medium">Features</a>
+                <a href="#services" class="block px-4 py-2 rounded-lg hover:bg-indigo-50 text-slate-700 font-medium">Services</a>
+                <a href="#pricing" class="block px-4 py-2 rounded-lg hover:bg-indigo-50 text-slate-700 font-medium">Pricing</a>
+                <a href="#" class="block px-4 py-2 rounded-lg bg-indigo-600 text-white font-medium text-center shadow-md">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden z-10" id="hero">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-12">
+            
+            <!-- Left: Text Content -->
+            <div class="lg:w-1/2 text-center lg:text-left relative z-10">
+                <div class="inline-block mb-6 reveal-up">
+                    <span class="glass px-4 py-1.5 rounded-full text-xs font-bold text-indigo-600 uppercase tracking-wider border border-indigo-100 shadow-sm flex items-center gap-2 mx-auto lg:mx-0 w-fit">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        v3.0 Now Available
+                    </span>
+                </div>
+
+                <h1 class="text-5xl lg:text-7xl font-extrabold text-slate-900 tracking-tight mb-6 leading-[1.1] reveal-up stagger-1">
+                    Soft Design. <br/>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-gradient-text">
+                        Hard Impact.
+                    </span>
+                </h1>
+
+                <p class="text-xl text-slate-600 mb-8 leading-relaxed reveal-up stagger-2 max-w-lg mx-auto lg:mx-0">
+                    We build digital experiences that feel organic. Fluid animations, intuitive interfaces, and powerful performance wrapped in silk.
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 reveal-up stagger-3">
+                    <button class="relative px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-xl shadow-indigo-500/20 overflow-hidden group transition-all hover:scale-105">
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="relative z-10 flex items-center gap-2">Start Free Trial <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+                    </button>
+                    <button class="px-8 py-4 bg-white text-slate-700 rounded-2xl font-bold border border-slate-200 shadow-sm hover:bg-slate-50 hover:text-indigo-600 transition-all hover:scale-105 flex items-center justify-center gap-2">
+                        <i data-lucide="play-circle" class="w-5 h-5"></i> Watch Demo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: 3D Image & Floating Elements -->
+            <div class="lg:w-1/2 relative reveal-zoom stagger-2">
+                <div class="relative w-full max-w-lg mx-auto animate-float">
+                    <!-- Main Hero Image -->
+                    <div class="relative rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/50">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" alt="Abstract 3D Soft Shapes" class="w-full object-cover hover:scale-110 transition-transform duration-[2s]">
+                        <!-- Overlay Gradient -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-purple-500/10 pointer-events-none"></div>
+                    </div>
+
+                    <!-- Floating Badge 1 -->
+                    <div class="absolute -top-10 -right-10 glass px-6 py-4 rounded-2xl shadow-lg animate-float-reverse hidden md:block">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-green-100 p-2 rounded-full text-green-600"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-bold uppercase">Growth</p>
+                                <p class="text-lg font-bold text-slate-800">+124%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Badge 2 -->
+                    <div class="absolute -bottom-10 -left-10 glass px-6 py-4 rounded-2xl shadow-lg animate-float hidden md:block" style="animation-delay: 1s;">
+                        <div class="flex -space-x-3">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64" alt="">
+                            <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=64&h=64" alt="">
+                            <div class="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">+2k</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGO MARQUEE -->
+    <div class="py-10 bg-white/40 backdrop-blur-sm border-y border-white/50 overflow-hidden">
+        <div class="flex w-[200%] animate-marquee hover-pause">
+            <div class="flex w-1/2 justify-around items-center gap-12 px-4 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg" alt="Airbnb" class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Uber_logo_2018.svg" alt="Uber" class="h-8">
+            </div>
+            <!-- Duplicate -->
+            <div class="flex w-1/2 justify-around items-center gap-12 px-4 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg" alt="Airbnb" class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" class="h-8">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Uber_logo_2018.svg" alt="Uber" class="h-8">
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES (Image Cards) -->
+    <section id="features" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal-up">
+                <h2 class="text-indigo-600 font-bold tracking-wide uppercase mb-2 text-sm">Why Choose Us</h2>
+                <h3 class="text-4xl md:text-5xl font-bold text-slate-900">Everything you need,<br>nothing you don't.</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 shadow-xl reveal-rotate-left">
+                    <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&w=800&q=80" alt="Abstract Art" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center mb-4 group-hover:bg-indigo-500 transition-colors duration-300">
+                            <i data-lucide="palette" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-2">Fluid Design</h4>
+                        <p class="text-slate-200 text-sm opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                            Interfaces that adapt to user behavior in real-time using our proprietary fluid engine.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 shadow-xl reveal-up stagger-1">
+                    <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800&q=80" alt="Abstract Art" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-500 transition-colors duration-300">
+                            <i data-lucide="cpu" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-2">Smart Core</h4>
+                        <p class="text-slate-200 text-sm opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                            Powered by AI that predicts your next move, saving you milliseconds that turn into hours.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="group relative rounded-3xl overflow-hidden h-96 shadow-xl reveal-rotate-right stagger-2">
+                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80" alt="Abstract Art" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-8 text-white">
+                        <div class="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center mb-4 group-hover:bg-pink-500 transition-colors duration-300">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-2">Secure Vault</h4>
+                        <p class="text-slate-200 text-sm opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                            Bank-grade encryption wrapped in a user experience so simple, you'll forget it's there.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKFLOW SECTION -->
+    <section id="process" class="py-24 bg-white/30 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900">How It Works</h2>
+                <p class="text-slate-500 mt-4">From chaos to clarity in three steps.</p>
+            </div>
+
+            <div class="relative grid md:grid-cols-3 gap-12">
+                <!-- Connecting Line (Desktop) -->
+                <div class="hidden md:block absolute top-12 left-16 right-16 h-1 bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 -z-10"></div>
+
+                <!-- Step 1 -->
+                <div class="text-center reveal-slide-left group cursor-pointer">
+                    <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-lg flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300 border-4 border-white">
+                        <i data-lucide="download" class="w-10 h-10 text-indigo-500 group-hover:animate-bounce"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-800 mb-2">1. Install</h4>
+                    <p class="text-slate-500 text-sm px-8">One line of code or a simple plugin download to get started.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="text-center reveal-up stagger-1 group cursor-pointer">
+                    <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-lg flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300 border-4 border-white">
+                        <i data-lucide="settings" class="w-10 h-10 text-purple-500 group-hover:rotate-90 transition-transform duration-500"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-800 mb-2">2. Configure</h4>
+                    <p class="text-slate-500 text-sm px-8">Set your preferences in our visual editor. No coding required.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="text-center reveal-slide-right stagger-2 group cursor-pointer">
+                    <div class="w-24 h-24 mx-auto bg-white rounded-full shadow-lg flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300 border-4 border-white">
+                        <i data-lucide="rocket" class="w-10 h-10 text-pink-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-slate-800 mb-2">3. Deploy</h4>
+                    <p class="text-slate-500 text-sm px-8">Push to production instantly with our global CDN.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION (New) -->
+    <section id="services" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
+            
+            <!-- Service 1 -->
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 reveal-slide-left">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl group">
+                        <div class="absolute inset-0 bg-indigo-600/20 group-hover:bg-indigo-600/0 transition-colors duration-500 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" alt="Analytics">
+                    </div>
+                </div>
+                <div class="md:w-1/2 reveal-slide-right">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="p-2 bg-indigo-100 rounded-lg text-indigo-600"><i data-lucide="bar-chart-2" class="w-6 h-6"></i></span>
+                        <h3 class="text-3xl font-bold text-slate-900">Real-time Analytics</h3>
+                    </div>
+                    <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                        Dive deep into your user data with our beautiful, interactive dashboards. Watch traffic spikes happen live and adjust your strategy on the fly with zero latency.
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-indigo-500 rounded-full"></div> Live user tracking</li>
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-indigo-500 rounded-full"></div> Heatmap visualization</li>
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-indigo-500 rounded-full"></div> Conversion funnels</li>
+                    </ul>
+                    <a href="#" class="text-indigo-600 font-semibold hover:text-indigo-800 flex items-center gap-2 group">Learn More <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i></a>
+                </div>
+            </div>
+
+            <!-- Service 2 -->
+            <div class="flex flex-col md:flex-row-reverse items-center gap-12">
+                <div class="md:w-1/2 reveal-slide-right">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl group">
+                        <div class="absolute inset-0 bg-purple-600/20 group-hover:bg-purple-600/0 transition-colors duration-500 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" alt="Cloud">
+                    </div>
+                </div>
+                <div class="md:w-1/2 reveal-slide-left">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="p-2 bg-purple-100 rounded-lg text-purple-600"><i data-lucide="cloud" class="w-6 h-6"></i></span>
+                        <h3 class="text-3xl font-bold text-slate-900">Global Cloud Mesh</h3>
+                    </div>
+                    <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                        Deploy your application to 300+ edge locations in seconds. Our intelligent routing ensures your users always connect to the fastest available server.
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-purple-500 rounded-full"></div> 99.99% Uptime SLA</li>
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-purple-500 rounded-full"></div> DDoS Protection</li>
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-purple-500 rounded-full"></div> Automated Scaling</li>
+                    </ul>
+                    <a href="#" class="text-purple-600 font-semibold hover:text-purple-800 flex items-center gap-2 group">Explore Infrastructure <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i></a>
+                </div>
+            </div>
+
+             <!-- Service 3 -->
+             <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 reveal-slide-left">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl group">
+                        <div class="absolute inset-0 bg-pink-600/20 group-hover:bg-pink-600/0 transition-colors duration-500 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" alt="Collaboration">
+                    </div>
+                </div>
+                <div class="md:w-1/2 reveal-slide-right">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="p-2 bg-pink-100 rounded-lg text-pink-600"><i data-lucide="users" class="w-6 h-6"></i></span>
+                        <h3 class="text-3xl font-bold text-slate-900">Team Synergy</h3>
+                    </div>
+                    <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                        Built for multiplayer. Comment, edit, and deploy together in real-time. Break down silos and ship products faster than ever before.
+                    </p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-pink-500 rounded-full"></div> Live cursors & comments</li>
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-pink-500 rounded-full"></div> Version history</li>
+                        <li class="flex items-center gap-3 text-slate-600"><div class="w-2 h-2 bg-pink-500 rounded-full"></div> Role-based access</li>
+                    </ul>
+                    <a href="#" class="text-pink-600 font-semibold hover:text-pink-800 flex items-center gap-2 group">See Collaboration <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PRICING SECTION (Enhanced) -->
+    <section id="pricing" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal-zoom">
+                <h2 class="text-3xl md:text-5xl font-bold text-slate-900">Transparent Pricing</h2>
+                <p class="text-slate-500 mt-4 text-lg">Start free, upgrade as you grow. No hidden fees.</p>
+                
+                <!-- Toggle (Visual) -->
+                <div class="mt-8 flex justify-center items-center gap-4">
+                    <span class="text-slate-500 font-medium">Monthly</span>
+                    <div class="w-14 h-8 bg-indigo-100 rounded-full p-1 flex cursor-pointer relative group">
+                         <div class="w-6 h-6 bg-indigo-600 rounded-full shadow-md transform translate-x-6 transition-transform"></div>
+                    </div>
+                    <span class="text-slate-800 font-bold">Yearly <span class="text-xs text-green-500 font-normal bg-green-100 px-2 py-1 rounded-full ml-1">-20%</span></span>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 items-center">
+                <!-- Basic -->
+                <div class="glass-card rounded-3xl p-8 reveal-rotate-left hover:border-indigo-300 relative group">
+                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-white border border-slate-100 shadow-sm px-4 py-1 rounded-full text-sm font-semibold text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">Good for hobbyists</div>
+                    <h3 class="text-xl font-bold text-slate-800">Starter</h3>
+                    <div class="my-4 flex items-end gap-1">
+                        <span class="text-4xl font-bold">$0</span>
+                        <span class="text-slate-400 mb-1">/mo</span>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-6">Perfect for testing ideas.</p>
+                    <ul class="space-y-3 mb-8 text-slate-600 text-sm">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 1 Project</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Basic Analytics</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Community Support</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border border-indigo-200 text-indigo-600 font-semibold hover:bg-indigo-50 transition-colors">Get Started</button>
+                </div>
+
+                <!-- Pro (Highlighted) -->
+                <div class="bg-slate-900 text-white rounded-3xl p-8 shadow-2xl shadow-indigo-500/20 transform scale-105 relative z-10 reveal-up group hover:shadow-indigo-500/40 transition-all duration-300">
+                    <div class="absolute top-0 right-0 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl animate-pulse">POPULAR</div>
+                    <h3 class="text-xl font-bold">Professional</h3>
+                    <div class="my-4 flex items-end gap-1">
+                        <span class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">$29</span>
+                        <span class="text-slate-400 mb-1">/mo</span>
+                    </div>
+                    <p class="text-slate-400 text-sm mb-6">For growing teams and startups.</p>
+                    <ul class="space-y-3 mb-8 text-slate-300 text-sm">
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-400"></i></div> Unlimited Projects</li>
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-400"></i></div> Advanced Analytics</li>
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-400"></i></div> Priority Support</li>
+                        <li class="flex items-center gap-2"><div class="p-1 bg-indigo-500/20 rounded-full"><i data-lucide="check" class="w-3 h-3 text-indigo-400"></i></div> Custom Domain</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 font-bold hover:shadow-lg transition-all hover:scale-105 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        Try Pro Free
+                    </button>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="glass-card rounded-3xl p-8 reveal-rotate-right hover:border-indigo-300 relative group">
+                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-white border border-slate-100 shadow-sm px-4 py-1 rounded-full text-sm font-semibold text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">Big scale</div>
+                    <h3 class="text-xl font-bold text-slate-800">Enterprise</h3>
+                    <div class="my-4 flex items-end gap-1">
+                        <span class="text-4xl font-bold">$99</span>
+                        <span class="text-slate-400 mb-1">/mo</span>
+                    </div>
+                     <p class="text-slate-500 text-sm mb-6">Maximum power and security.</p>
+                    <ul class="space-y-3 mb-8 text-slate-600 text-sm">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Everything in Pro</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> Dedicated Manager</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> SSO & Audit Logs</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border border-indigo-200 text-indigo-600 font-semibold hover:bg-indigo-50 transition-colors">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM SECTION -->
+    <section id="team" class="py-24 bg-white/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal-up">
+                <h2 class="text-3xl md:text-5xl font-bold text-slate-900">Meet the Creators</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- Member 1 -->
+                <div class="text-center group reveal-up">
+                    <div class="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Team" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-indigo-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="font-bold text-lg">Sarah Jenkins</h4>
+                    <p class="text-indigo-500 text-sm">Lead Designer</p>
+                </div>
+
+                <!-- Member 2 -->
+                <div class="text-center group reveal-up stagger-1">
+                    <div class="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="Team" class="w-full h-full object-cover">
+                         <div class="absolute inset-0 bg-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="font-bold text-lg">David Chen</h4>
+                    <p class="text-indigo-500 text-sm">CTO</p>
+                </div>
+
+                <!-- Member 3 -->
+                <div class="text-center group reveal-up stagger-2">
+                    <div class="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80" alt="Team" class="w-full h-full object-cover">
+                         <div class="absolute inset-0 bg-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="font-bold text-lg">Emily Ross</h4>
+                    <p class="text-indigo-500 text-sm">Product Manager</p>
+                </div>
+
+                <!-- Member 4 -->
+                <div class="text-center group reveal-up stagger-3">
+                    <div class="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80" alt="Team" class="w-full h-full object-cover">
+                         <div class="absolute inset-0 bg-teal-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="font-bold text-lg">Marcus Johnson</h4>
+                    <p class="text-indigo-500 text-sm">Head of Growth</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="py-20">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 reveal-up">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden reveal-slide-left">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center font-semibold text-slate-800 hover:bg-white/50 transition-colors faq-btn">
+                        Is there a free trial?
+                        <i data-lucide="chevron-down" class="w-5 h-5 transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-slate-600 text-sm">
+                        Yes, we offer a 14-day free trial on all paid plans. No credit card required to start.
+                    </div>
+                </div>
+                <!-- FAQ Item 2 -->
+                <div class="glass-card rounded-2xl overflow-hidden reveal-slide-right stagger-1">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center font-semibold text-slate-800 hover:bg-white/50 transition-colors faq-btn">
+                        Can I cancel anytime?
+                        <i data-lucide="chevron-down" class="w-5 h-5 transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-slate-600 text-sm">
+                        Absolutely. There are no contracts or hidden fees. Cancel directly from your dashboard.
+                    </div>
+                </div>
+                <!-- FAQ Item 3 -->
+                <div class="glass-card rounded-2xl overflow-hidden reveal-slide-left stagger-2">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center font-semibold text-slate-800 hover:bg-white/50 transition-colors faq-btn">
+                        Do you support custom domains?
+                        <i data-lucide="chevron-down" class="w-5 h-5 transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-slate-600 text-sm">
+                        Yes, all Pro and Enterprise plans come with free custom domain support and SSL certificates.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="py-24 px-4 relative z-10">
+        <div class="max-w-5xl mx-auto reveal-zoom">
+            <div class="relative rounded-[3rem] overflow-hidden shadow-2xl bg-slate-900 text-white text-center py-20 px-8 group">
+                <!-- Animated Background -->
+                <div class="absolute inset-0 opacity-30">
+                    <div class="absolute w-[500px] h-[500px] bg-indigo-600 rounded-full blur-3xl -top-20 -left-20 animate-blob"></div>
+                    <div class="absolute w-[500px] h-[500px] bg-pink-600 rounded-full blur-3xl -bottom-20 -right-20 animate-blob animation-delay-2000"></div>
+                </div>
+                
+                <div class="relative z-10">
+                    <h2 class="text-4xl md:text-6xl font-bold mb-6">Ready to float?</h2>
+                    <p class="text-slate-300 text-xl mb-10 max-w-2xl mx-auto">Join 10,000+ developers building the softest, most fluid web experiences.</p>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center gap-5">
+                        <button class="bg-indigo-500 hover:bg-indigo-400 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-indigo-500/50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2">
+                            Get Started Now <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white/60 backdrop-blur-md border-t border-slate-200 pt-16 pb-8 text-center md:text-left">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-2">
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
+                        <i data-lucide="zap" class="w-6 h-6 text-indigo-600"></i>
+                        <span class="text-2xl font-bold text-slate-800">TechNova</span>
+                    </div>
+                    <p class="text-slate-500 max-w-sm mx-auto md:mx-0">
+                        Crafting the future of digital interaction with softness, depth, and motion.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-2 text-slate-500 text-sm">
+                        <li><a href="#" class="hover:text-indigo-600 transition-colors">Features</a></li>
+                        <li><a href="#" class="hover:text-indigo-600 transition-colors">Integrations</a></li>
+                        <li><a href="#" class="hover:text-indigo-600 transition-colors">Pricing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-2 text-slate-500 text-sm">
+                        <li><a href="#" class="hover:text-indigo-600 transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-indigo-600 transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-indigo-600 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm">
+                <p>© 2025 TechNova Inc. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-indigo-600 hover:-translate-y-1 transition-transform"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-indigo-600 hover:-translate-y-1 transition-transform"><i data-lucide="github" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-indigo-600 hover:-translate-y-1 transition-transform"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Init Icons
+        lucide.createIcons();
+
+        // 2. Preloader Logic
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+            }, 1000);
+        });
+
+        // 3. Intersection Observer for Scroll Animations
+        const observerOptions = {
+            threshold: 0.15, // Trigger when 15% of element is visible
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Optional: unobserve if you want it to only animate once
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Select all reveal classes
+        document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .reveal-zoom, .reveal-slide-left, .reveal-slide-right, .reveal-rotate-left, .reveal-rotate-right').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 4. Navbar Blur on Scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2');
+                navbar.classList.remove('py-6');
+                navbar.firstElementChild.firstElementChild.classList.add('bg-white/80', 'backdrop-blur-xl');
+            } else {
+                navbar.classList.add('py-6');
+                navbar.classList.remove('py-2');
+                navbar.firstElementChild.firstElementChild.classList.remove('bg-white/80', 'backdrop-blur-xl');
+            }
+        });
+
+        // 5. Mobile Menu
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 6. FAQ Accordion
+        const faqBtns = document.querySelectorAll('.faq-btn');
+        faqBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                const icon = btn.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                
+                if (content.classList.contains('hidden')) {
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

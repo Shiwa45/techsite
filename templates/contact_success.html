@@ -4,82 +4,71 @@
 
 {% block content %}
 <!-- Success Section -->
-<section class="py-24 lg:py-32">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-2xl mx-auto text-center">
-            <!-- Success Icon -->
-            <div class="mb-8 animate-on-scroll">
-                <div class="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center">
-                    <svg class="w-12 h-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                </div>
-            </div>
+<section class="min-h-screen flex items-center justify-center py-24 px-4">
+    <div class="max-w-2xl w-full glass-card rounded-[3rem] p-12 md:p-16 text-center shadow-2xl border border-white/60 relative overflow-hidden reveal-zoom">
+        
+        <!-- Background Decoration -->
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-green-50 to-indigo-50 -z-10"></div>
+        <div class="absolute top-[-20%] right-[-20%] w-64 h-64 bg-green-200 rounded-full blur-3xl opacity-30 animate-pulse"></div>
 
-            <!-- Success Message -->
-            <div class="animate-on-scroll">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                    Message Sent <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">Successfully!</span>
-                </h1>
-
-                <p class="text-xl text-gray-600 leading-relaxed mb-8">
-                    Thank you for contacting us. We've received your message and our team will get back to you within 24 hours.
-                </p>
-
-                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mb-8 text-left">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">What happens next?</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-start">
-                            <svg class="w-6 h-6 text-red-500 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span>Our team will review your inquiry and assign it to the right specialist</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-6 h-6 text-red-500 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span>You'll receive a personalized response via email within 24 hours</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="w-6 h-6 text-red-500 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span>We'll schedule a call or meeting to discuss your requirements in detail</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="{% url 'home' %}" class="px-8 py-4 bg-gradient-primary text-white font-semibold rounded-full hover:shadow-xl transition-all duration-300 hover-lift focus:outline-none focus:ring-4 focus:ring-red-300">
-                        Return to Home
-                    </a>
-                    <a href="{% url 'blog_list' %}" class="px-8 py-4 border-2 border-red-500 text-red-500 font-semibold rounded-full hover:bg-red-50 transition-all duration-300 hover-lift focus:outline-none focus:ring-4 focus:ring-red-300">
-                        Read Our Blog
-                    </a>
-                </div>
-
-                <!-- Additional Help -->
-                <div class="mt-12 pt-8 border-t border-gray-200">
-                    <p class="text-gray-600 mb-4">Need immediate assistance?</p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center text-sm">
-                        <a href="tel:01204124112" class="inline-flex items-center text-red-500 hover:text-red-600 font-medium">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                            </svg>
-                            Call us: 01204124112
-                        </a>
-                        <a href="mailto:Business@easyian.com" class="inline-flex items-center text-red-500 hover:text-red-600 font-medium">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                            Email: Business@easyian.com
-                        </a>
-                    </div>
-                </div>
+        <!-- Success Icon -->
+        <div class="mb-8">
+            <div class="w-24 h-24 mx-auto bg-green-100 rounded-full flex items-center justify-center text-green-600 shadow-lg shadow-green-500/20 animate-bounce">
+                <i data-lucide="check-circle-2" class="w-12 h-12"></i>
             </div>
         </div>
+
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
+            Message Sent!
+        </h1>
+
+        <p class="text-xl text-slate-600 leading-relaxed mb-10">
+            Thank you for contacting us. We've received your inquiry and our team will get back to you within <span class="font-bold text-indigo-600">24 hours</span>.
+        </p>
+
+        <!-- Next Steps -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 mb-10 text-left border border-indigo-100 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i data-lucide="info" class="w-5 h-5 text-indigo-500"></i> What happens next?
+            </h3>
+            <ul class="space-y-3 text-slate-600 text-sm">
+                <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-indigo-600 text-xs font-bold">1</div>
+                    <span>Our team reviews your requirements.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-indigo-600 text-xs font-bold">2</div>
+                    <span>You receive a personalized response via email.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-indigo-600 text-xs font-bold">3</div>
+                    <span>We schedule a discovery call if needed.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'home' %}" class="px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-600 hover:-translate-y-1 transition-all duration-300">
+                Return Home
+            </a>
+            <a href="{% url 'blog_list' %}" class="px-8 py-4 bg-white text-indigo-600 font-bold rounded-xl border border-indigo-100 hover:bg-indigo-50 hover:border-indigo-200 transition-all duration-300">
+                Read Our Blog
+            </a>
+        </div>
+        
+        <!-- Contact Details Footer -->
+        <div class="mt-12 pt-8 border-t border-slate-200/60">
+             <div class="flex flex-col sm:flex-row justify-center gap-6 text-sm text-slate-500">
+                <a href="tel:01204124112" class="flex items-center gap-2 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="phone" class="w-4 h-4"></i> 01204124112
+                </a>
+                <a href="mailto:Business@easyian.com" class="flex items-center gap-2 hover:text-indigo-600 transition-colors">
+                    <i data-lucide="mail" class="w-4 h-4"></i> Business@easyian.com
+                </a>
+            </div>
+        </div>
+
     </div>
 </section>
 {% endblock %}

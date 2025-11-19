@@ -4,6 +4,7 @@ from django.http import JsonResponse, Http404
 from django.db.models import Count
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 
 from .models import (
     City,
@@ -403,6 +404,37 @@ def landing(request):
             lead = contact_form.save(commit=False)
             lead.source = 'landing_page'
             lead.save()
+
+            # Send email notification
+            subject = f'New Landing Page Submission from {lead.name}'
+            message = f"""
+New landing page form submission received:
+
+Name: {lead.name}
+Email: {lead.email}
+Phone: {lead.phone or 'Not provided'}
+Company: {lead.company or 'Not provided'}
+Job Title: {lead.job_title or 'Not provided'}
+Service Interest: {lead.get_interest_display()}
+Message: {lead.message}
+
+Budget Range: {lead.notes.split('|')[0].replace('Budget: ', '') if lead.notes else 'Not specified'}
+Timeline: {lead.notes.split('|')[1].replace('Timeline: ', '') if lead.notes and '|' in lead.notes else 'Not specified'}
+
+Submitted at: {lead.created_at}
+"""
+            try:
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email='shiwansh283@gmail.com',
+                    recipient_list=['shiwanshmishra600@gmail.com'],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                # Log the error but don't fail the form submission
+                print(f"Email sending failed: {e}")
+
             messages.success(request, "Thank you! We'll get back to you within 24 hours.")
             return redirect('contact_success')
         else:
@@ -421,6 +453,40 @@ def contact(request):
             lead = contact_form.save(commit=False)
             lead.source = 'contact_form'
             lead.save()
+
+            # Send email notification
+            print(f"DEBUG: Preparing to send email for contact form submission from {lead.name}")
+            subject = f'New Contact Form Submission from {lead.name}'
+            message = f"""
+New contact form submission received:
+
+Name: {lead.name}
+Email: {lead.email}
+Phone: {lead.phone or 'Not provided'}
+Company: {lead.company or 'Not provided'}
+Job Title: {lead.job_title or 'Not provided'}
+Service Interest: {lead.get_interest_display()}
+Message: {lead.message}
+
+Budget Range: {lead.notes.split('|')[0].replace('Budget: ', '') if lead.notes else 'Not specified'}
+Timeline: {lead.notes.split('|')[1].replace('Timeline: ', '') if lead.notes and '|' in lead.notes else 'Not specified'}
+
+Submitted at: {lead.created_at}
+"""
+            try:
+                print("DEBUG: Attempting to send email...")
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email='shiwansh283@gmail.com',
+                    recipient_list=['shiwanshmishra600@gmail.com'],
+                    fail_silently=False,
+                )
+                print("DEBUG: Email sent successfully!")
+            except Exception as e:
+                # Log the error but don't fail the form submission
+                print(f"DEBUG: Email sending failed: {e}")
+
             messages.success(request, "Thank you! We'll get back to you within 24 hours.")
             return redirect('contact_success')
         else:

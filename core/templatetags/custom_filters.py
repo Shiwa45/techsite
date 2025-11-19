@@ -1,11 +1,17 @@
-# your_app_name/templatetags/custom_filters.py
 from django import template
 
 register = template.Library()
 
 @register.filter
-def multiply(value, arg):
+def div(value, arg):
+    try:
+        return float(value) / float(arg)
+    except (ValueError, ZeroDivisionError):
+        return None
+
+@register.filter
+def mul(value, arg):
     try:
         return float(value) * float(arg)
-    except (ValueError, TypeError):
-        return value
+    except (ValueError):
+        return None

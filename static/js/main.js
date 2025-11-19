@@ -49,43 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Simple form validation
-    const forms = document.querySelectorAll('form');
-    
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.classList.add('border-red-500');
-                    
-                    // Add error message if it doesn't exist
-                    const errorMessage = field.parentElement.querySelector('.error-message');
-                    if (!errorMessage) {
-                        const errorElement = document.createElement('p');
-                        errorElement.className = 'text-red-500 text-xs mt-1 error-message';
-                        errorElement.textContent = 'This field is required';
-                        field.parentElement.appendChild(errorElement);
-                    }
-                } else {
-                    field.classList.remove('border-red-500');
-                    
-                    // Remove error message if it exists
-                    const errorMessage = field.parentElement.querySelector('.error-message');
-                    if (errorMessage) {
-                        errorMessage.remove();
-                    }
-                }
-            });
-            
-            if (!isValid) {
-                e.preventDefault();
-            }
-        });
-    });
     
     // Add animation to elements when they come into view
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
@@ -101,5 +64,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     animatedElements.forEach(element => {
         animateObserver.observe(element);
+    });
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span>Processing...</span>';
+            }
+        });
     });
 });

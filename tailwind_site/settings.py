@@ -138,3 +138,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TAILWIND_APP_NAME = 'web'  # or whatever your app is named
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'shiwansh283@gmail.com'
+EMAIL_HOST_PASSWORD = 'puug itrs emgh ynyc'  # Replace with your actual Gmail password or App Password if 2FA is enabled
+DEFAULT_FROM_EMAIL = 'shiwansh283@gmail.com'

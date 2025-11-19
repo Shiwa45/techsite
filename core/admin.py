@@ -33,7 +33,7 @@ class CityServiceInline(admin.TabularInline):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('title', 'display_order', 'is_active', 'city_count')
+    list_display = ('title', 'price', 'currency', 'display_order', 'is_active', 'city_count')
     list_filter = ('is_active',)
     search_fields = ('title', 'short_description')
     prepopulated_fields = {'slug': ('title',)}

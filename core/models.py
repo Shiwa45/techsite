@@ -50,6 +50,24 @@ class Service(models.Model):
     features = models.JSONField(default=list)  # Store as JSON array
     benefits = models.JSONField(default=list)
     process = models.JSONField(default=list)
+
+    # Pricing Plan 1
+    plan1_title = models.CharField(max_length=100, blank=True, default="Basic Plan")
+    plan1_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    plan1_features = models.JSONField(default=list, blank=True, help_text="List of features for Plan 1")
+
+    # Pricing Plan 2
+    plan2_title = models.CharField(max_length=100, blank=True, default="Standard Plan")
+    plan2_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    plan2_features = models.JSONField(default=list, blank=True, help_text="List of features for Plan 2")
+
+    # Pricing Plan 3
+    plan3_title = models.CharField(max_length=100, blank=True, default="Premium Plan")
+    plan3_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    plan3_features = models.JSONField(default=list, blank=True, help_text="List of features for Plan 3")
+
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    currency = models.CharField(max_length=3, default='INR')
     is_active = models.BooleanField(default=True)
     display_order = models.IntegerField(default=0)
     featured_image = models.ImageField(upload_to='services/', blank=True, null=True)

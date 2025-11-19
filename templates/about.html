@@ -4,167 +4,109 @@
 {% block meta_description %}{{ meta_description }}{% endblock %}
 
 {% block extra_head %}
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <style>
-    /* About Page Specific Animations */
-    @keyframes mission-glow {
-        0%, 100% { 
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.25);
-            transform: scale(1);
-        }
-        50% { 
-            box-shadow: 0 0 50px rgba(239, 68, 68, 0.5);
-            transform: scale(1.02);
-        }
+    /* Custom floating animation for specific about elements */
+    @keyframes float-slow-reverse {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(15px); }
     }
-    
-    @keyframes vision-pulse {
-        0%, 100% { 
-            box-shadow: 0 0 30px rgba(248, 113, 113, 0.25);
-        }
-        50% { 
-            box-shadow: 0 0 50px rgba(248, 113, 113, 0.45);
-        }
-    }
-    
-    @keyframes values-rotate {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    @keyframes team-hover {
-        0% { transform: translateY(0) scale(1); }
-        50% { transform: translateY(-10px) scale(1.05); }
-        100% { transform: translateY(0) scale(1); }
-    }
-    
-    .mission-card {
-        animation: mission-glow 4s ease-in-out infinite;
-    }
-    
-    .vision-card {
-        animation: vision-pulse 3s ease-in-out infinite;
-    }
-    
-    .values-icon {
-        animation: values-rotate 20s linear infinite;
-    }
-    
-    .team-card:hover {
-        animation: team-hover 0.6s ease-in-out;
-    }
-    
-    .hero-about-bg {
-        background: 
-            radial-gradient(circle at 25% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 75% 25%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.05) 0%, transparent 50%);
-    }
-    
-    .animate-pulse-glow {
-        animation: mission-glow 3s ease-in-out infinite;
+    .animate-float-slow-reverse {
+        animation: float-slow-reverse 6s ease-in-out infinite;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative py-24 lg:py-32 overflow-hidden hero-about-bg">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="animate-on-scroll">
-                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-                    <span class="block text-gray-900">About</span>
-                    <span class="block bg-gradient-to-r from-red-500 via-red-400 to-red-600 bg-clip-text text-transparent animate-gradient">
-                        Easyian
-                    </span>
-                </h1>
-                <p class="text-xl md:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                    Pioneering the future of technology with innovative solutions that empower businesses to achieve extraordinary success in the digital age.
-                </p>
-            </div>
+<section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div class="inline-block mb-6 reveal-up">
+             <span class="glass px-4 py-1.5 rounded-full text-xs font-bold text-indigo-600 uppercase tracking-wider border border-indigo-100 shadow-sm">
+                Who We Are
+            </span>
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 tracking-tight mb-6 reveal-up stagger-1">
+            About <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-gradient-text">Easyian</span>
+        </h1>
+        
+        <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-10 reveal-up stagger-2">
+            Pioneering the future of technology with innovative solutions that empower businesses to achieve extraordinary success in the digital age.
+        </p>
+    </div>
+
+    <!-- Floating Decorative Elements -->
+    <div class="absolute top-1/4 left-10 animate-float hidden lg:block opacity-60">
+        <div class="glass w-16 h-16 rounded-2xl flex items-center justify-center text-indigo-500 rotate-12">
+            <i data-lucide="users" class="w-8 h-8"></i>
         </div>
     </div>
-    
-    <!-- Floating Elements -->
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="floating-element absolute top-20 left-10 w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-        </div>
-        <div class="floating-element absolute top-40 right-20 w-12 h-12 bg-red-400/10 rounded-lg flex items-center justify-center">
-            <svg class="w-6 h-6 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
-            </svg>
-        </div>
-        <div class="floating-element absolute bottom-40 left-20 w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center">
-            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
+    <div class="absolute bottom-1/3 right-10 animate-float-reverse hidden lg:block opacity-60">
+        <div class="glass w-20 h-20 rounded-full flex items-center justify-center text-purple-500 -rotate-12">
+            <i data-lucide="globe" class="w-10 h-10"></i>
         </div>
     </div>
 </section>
 
 <!-- Our Story Section -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-20 bg-white/50 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <!-- Content -->
-            <div class="animate-on-scroll">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-                    Our <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">Story</span>
+            <div class="reveal-slide-left">
+                <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-8">
+                    Our <span class="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Story</span>
                 </h2>
-                <div class="space-y-6 text-lg text-gray-700 leading-relaxed">
+                <div class="space-y-6 text-lg text-slate-600 leading-relaxed">
                     <p>
-                        Founded with a vision to democratize technology access, <span class="font-semibold text-red-500">Easyian</span> 
-                        emerged from a simple belief: every business, regardless of size, deserves access to cutting-edge technology solutions 
-                        that can transform their operations and accelerate growth.
+                        Founded with a vision to democratize technology access, <span class="font-bold text-indigo-600">Easyian</span> 
+                        emerged from a simple belief: every business, regardless of size, deserves access to cutting-edge technology solutions.
                     </p>
                     <p>
-                        Since our inception, we've been at the forefront of technological innovation, helping businesses navigate 
-                        the complex digital landscape with confidence. Our journey began with a small team of passionate developers 
+                        Since our inception, we've been at the forefront of technological innovation. Our journey began with a small team of passionate developers 
                         and has evolved into a comprehensive technology partner serving clients across diverse industries.
                     </p>
                     <p>
                         Today, we pride ourselves on being more than just a service provider – we're strategic partners who understand 
-                        that technology is not just about code and systems, but about empowering people and transforming possibilities 
-                        into realities.
+                        that technology is about empowering people and transforming possibilities into realities.
                     </p>
                 </div>
                 
                 <!-- Stats -->
                 <div class="grid grid-cols-3 gap-6 mt-12">
-                    <div class="text-center">
-                        <div class="text-3xl md:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">5+</div>
-                        <div class="text-sm text-gray-600 mt-1">Years of Excellence</div>
+                    <div class="glass p-4 rounded-xl text-center hover:-translate-y-1 transition-transform duration-300">
+                        <div class="text-3xl md:text-4xl font-bold text-indigo-600">5+</div>
+                        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wide font-bold">Years</div>
                     </div>
-                    <div class="text-center">
-                        <div class="text-3xl md:text-4xl font-bold bg-gradient-secondary bg-clip-text text-transparent">100+</div>
-                        <div class="text-sm text-gray-600 mt-1">Projects Completed</div>
+                    <div class="glass p-4 rounded-xl text-center hover:-translate-y-1 transition-transform duration-300">
+                        <div class="text-3xl md:text-4xl font-bold text-purple-600">100+</div>
+                        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wide font-bold">Projects</div>
                     </div>
-                    <div class="text-center">
-                        <div class="text-3xl md:text-4xl font-bold bg-gradient-tech bg-clip-text text-transparent">50+</div>
-                        <div class="text-sm text-gray-600 mt-1">Happy Clients</div>
+                    <div class="glass p-4 rounded-xl text-center hover:-translate-y-1 transition-transform duration-300">
+                        <div class="text-3xl md:text-4xl font-bold text-pink-600">50+</div>
+                        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wide font-bold">Clients</div>
                     </div>
                 </div>
             </div>
             
             <!-- Image -->
-            <div class="relative animate-on-scroll">
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-                     alt="Our Team" 
-                     class="w-full h-auto rounded-2xl shadow-2xl hover-lift">
-                
-                <!-- Floating Achievement Badge -->
-                <div class="absolute -top-6 -right-6 bg-white rounded-xl shadow-xl p-6 animate-float">
-                    <div class="text-center">
-                        <div class="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-2">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
+            <div class="relative reveal-slide-right">
+                <div class="relative group">
+                     <div class="absolute -inset-4 bg-gradient-to-r from-indigo-200 to-pink-200 rounded-[2rem] blur-2xl opacity-40 group-hover:opacity-60 transition duration-500"></div>
+                     <div class="relative rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white/50">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+                             alt="Our Team" 
+                             class="w-full h-auto transform group-hover:scale-105 transition-transform duration-700">
+                     </div>
+                    
+                    <!-- Floating Achievement Badge -->
+                    <div class="absolute -top-6 -right-6 glass p-5 rounded-2xl shadow-xl animate-float-slow-reverse hidden md:block">
+                        <div class="text-center flex flex-col items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-2 text-green-600">
+                                <i data-lucide="award" class="w-6 h-6"></i>
+                            </div>
+                            <div class="text-sm font-bold text-slate-800">ISO Certified</div>
                         </div>
-                        <div class="text-sm font-semibold text-gray-900">ISO Certified</div>
                     </div>
                 </div>
             </div>
@@ -173,58 +115,44 @@
 </section>
 
 <!-- Mission, Vision & Values -->
-<section class="py-20 bg-gray-50">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16 animate-on-scroll">
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Our <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">Foundation</span>
-            </h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Built on strong principles and driven by a clear vision for the future of technology
-            </p>
+<section class="py-24 bg-white/30 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-20 reveal-up">
+            <h2 class="text-indigo-600 font-bold tracking-wide uppercase mb-2 text-sm">Core Principles</h2>
+            <h3 class="text-4xl md:text-5xl font-bold text-slate-900">Our Foundation</h3>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Mission -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg mission-card animate-on-scroll">
-                <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-red-700 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
+            <div class="glass-card p-8 rounded-3xl hover:border-indigo-300 transition-all duration-300 group reveal-up">
+                <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="target" class="w-8 h-8"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Our Mission</h3>
-                <p class="text-gray-600 text-center leading-relaxed">
-                    To empower businesses with innovative technology solutions that drive growth, efficiency, and success in the digital era. 
-                    We make advanced technology accessible and actionable for organizations of all sizes.
+                <h3 class="text-2xl font-bold text-slate-800 mb-4">Our Mission</h3>
+                <p class="text-slate-600 leading-relaxed">
+                    To empower businesses with innovative technology solutions that drive growth, efficiency, and success in the digital era.
                 </p>
             </div>
             
             <!-- Vision -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg vision-card animate-on-scroll">
-                <div class="w-16 h-16 bg-gradient-to-r from-red-400 to-red-600 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
+            <div class="glass-card p-8 rounded-3xl hover:border-purple-300 transition-all duration-300 group reveal-up stagger-1">
+                <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="eye" class="w-8 h-8"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Our Vision</h3>
-                <p class="text-gray-600 text-center leading-relaxed">
-                    To be the leading technology partner that transforms ideas into reality, creating a future where technology 
-                    seamlessly enhances human potential and drives meaningful progress across all industries.
+                <h3 class="text-2xl font-bold text-slate-800 mb-4">Our Vision</h3>
+                <p class="text-slate-600 leading-relaxed">
+                    To be the leading technology partner that transforms ideas into reality, creating a future where technology seamlessly enhances human potential.
                 </p>
             </div>
             
             <!-- Values -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 animate-on-scroll">
-                <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-red-700 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                    <svg class="w-8 h-8 text-white values-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
+            <div class="glass-card p-8 rounded-3xl hover:border-pink-300 transition-all duration-300 group reveal-up stagger-2">
+                <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i data-lucide="heart" class="w-8 h-8"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 text-center mb-4">Our Values</h3>
-                <p class="text-gray-600 text-center leading-relaxed">
-                    Innovation, integrity, excellence, and customer-centricity guide everything we do. We believe in transparent 
-                    communication, continuous learning, and building lasting relationships based on trust and mutual success.
+                <h3 class="text-2xl font-bold text-slate-800 mb-4">Our Values</h3>
+                <p class="text-slate-600 leading-relaxed">
+                    Innovation, integrity, excellence, and customer-centricity. We build lasting relationships based on trust and mutual success.
                 </p>
             </div>
         </div>
@@ -232,108 +160,74 @@
 </section>
 
 <!-- Team Section -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16 animate-on-scroll">
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Meet Our <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">Team</span>
-            </h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Passionate professionals dedicated to delivering exceptional technology solutions and driving your success
-            </p>
+<section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-20 reveal-up">
+             <h2 class="text-indigo-600 font-bold tracking-wide uppercase mb-2 text-sm">Leadership</h2>
+            <h3 class="text-4xl md:text-5xl font-bold text-slate-900">Meet Our Team</h3>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             <!-- Team Member 1 -->
-            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 team-card p-8 text-center animate-on-scroll">
-                <div class="relative inline-block mb-6">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
-                         alt="John Smith" 
-                         class="w-24 h-24 rounded-full object-cover mx-auto">
-                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-red-500 rounded-full border-4 border-white flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
+            <div class="group relative reveal-up">
+                <div class="glass-card rounded-3xl p-8 text-center hover:-translate-y-2 transition-all duration-300 border-transparent hover:border-indigo-200">
+                    <div class="relative w-32 h-32 mx-auto mb-6">
+                         <div class="absolute inset-0 bg-indigo-500 rounded-full blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" 
+                             alt="John Smith" 
+                             class="w-full h-full rounded-full object-cover relative z-10 border-4 border-white shadow-md">
                     </div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">John Smith</h3>
-                <p class="text-red-500 font-semibold mb-4">CEO & Founder</p>
-                <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                    Visionary leader with 15+ years of experience in technology innovation and business transformation.
-                </p>
-                <div class="flex justify-center space-x-3">
-                    <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors duration-300">
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors duration-300">
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                        </svg>
-                    </a>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">John Smith</h3>
+                    <p class="text-indigo-500 font-semibold text-sm mb-4">CEO & Founder</p>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                        Visionary leader with 15+ years of experience in technology innovation.
+                    </p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="p-2 bg-slate-100 rounded-full hover:bg-indigo-100 hover:text-indigo-600 transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2 bg-slate-100 rounded-full hover:bg-indigo-100 hover:text-indigo-600 transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                    </div>
                 </div>
             </div>
             
             <!-- Team Member 2 -->
-            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 team-card p-8 text-center animate-on-scroll">
-                <div class="relative inline-block mb-6">
-                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b029?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
-                         alt="Sarah Johnson" 
-                         class="w-24 h-24 rounded-full object-cover mx-auto">
-                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-red-500 rounded-full border-4 border-white flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
+            <div class="group relative reveal-up stagger-1">
+                <div class="glass-card rounded-3xl p-8 text-center hover:-translate-y-2 transition-all duration-300 border-transparent hover:border-purple-200">
+                    <div class="relative w-32 h-32 mx-auto mb-6">
+                         <div class="absolute inset-0 bg-purple-500 rounded-full blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b029?auto=format&fit=crop&w=400&q=80" 
+                             alt="Sarah Johnson" 
+                             class="w-full h-full rounded-full object-cover relative z-10 border-4 border-white shadow-md">
                     </div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Sarah Johnson</h3>
-                <p class="text-red-500 font-semibold mb-4">CTO & Co-Founder</p>
-                <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                    Technical architect and innovation driver, specializing in scalable software solutions and emerging technologies.
-                </p>
-                <div class="flex justify-center space-x-3">
-                    <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors duration-300">
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors duration-300">
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </a>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Sarah Johnson</h3>
+                    <p class="text-purple-500 font-semibold text-sm mb-4">CTO & Co-Founder</p>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                        Technical architect specializing in scalable software solutions.
+                    </p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="p-2 bg-slate-100 rounded-full hover:bg-purple-100 hover:text-purple-600 transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2 bg-slate-100 rounded-full hover:bg-purple-100 hover:text-purple-600 transition-colors"><i data-lucide="github" class="w-4 h-4"></i></a>
+                    </div>
                 </div>
             </div>
             
             <!-- Team Member 3 -->
-            <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 team-card p-8 text-center animate-on-scroll">
-                <div class="relative inline-block mb-6">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
-                         alt="Mike Davis" 
-                         class="w-24 h-24 rounded-full object-cover mx-auto">
-                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-red-500 rounded-full border-4 border-white flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
+            <div class="group relative reveal-up stagger-2">
+                <div class="glass-card rounded-3xl p-8 text-center hover:-translate-y-2 transition-all duration-300 border-transparent hover:border-pink-200">
+                    <div class="relative w-32 h-32 mx-auto mb-6">
+                         <div class="absolute inset-0 bg-pink-500 rounded-full blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80" 
+                             alt="Mike Davis" 
+                             class="w-full h-full rounded-full object-cover relative z-10 border-4 border-white shadow-md">
                     </div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Mike Davis</h3>
-                <p class="text-red-500 font-semibold mb-4">Lead Developer</p>
-                <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                    Full-stack developer passionate about creating robust, scalable applications that solve real-world problems.
-                </p>
-                <div class="flex justify-center space-x-3">
-                    <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors duration-300">
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors duration-300">
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </a>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Mike Davis</h3>
+                    <p class="text-pink-500 font-semibold text-sm mb-4">Lead Developer</p>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                        Full-stack developer creating robust applications that solve real problems.
+                    </p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="p-2 bg-slate-100 rounded-full hover:bg-pink-100 hover:text-pink-600 transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2 bg-slate-100 rounded-full hover:bg-pink-100 hover:text-pink-600 transition-colors"><i data-lucide="code" class="w-4 h-4"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -341,121 +235,50 @@
 </section>
 
 <!-- Company Culture -->
-<section class="py-20 bg-gray-50">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center animate-on-scroll">
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-                Our <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">Culture</span>
+<section class="py-24 bg-slate-50 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center mb-16 reveal-up">
+            <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+                Our <span class="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Culture</span>
             </h2>
-            <p class="text-xl text-gray-600 leading-relaxed mb-12">
-                We foster an environment of innovation, collaboration, and continuous learning where every team member 
-                can thrive and contribute to our collective success.
+            <p class="text-xl text-slate-600 leading-relaxed">
+                We foster an environment of innovation, collaboration, and continuous learning where every team member can thrive.
             </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Culture Value 1 -->
-            <div class="text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                    </svg>
+            <div class="text-center reveal-up group cursor-default">
+                <div class="w-16 h-16 mx-auto bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                    <i data-lucide="lightbulb" class="w-8 h-8"></i>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Innovation First</h3>
-                <p class="text-gray-600 leading-relaxed">
-                    We embrace creativity and encourage bold thinking to develop groundbreaking solutions.
-                </p>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Innovation First</h3>
+                <p class="text-slate-500 text-sm">Embracing creativity and bold thinking.</p>
             </div>
             
-            <!-- Culture Value 2 -->
-            <div class="text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-red-700 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
+             <div class="text-center reveal-up stagger-1 group cursor-default">
+                <div class="w-16 h-16 mx-auto bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-4 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+                    <i data-lucide="users-2" class="w-8 h-8"></i>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Team Collaboration</h3>
-                <p class="text-gray-600 leading-relaxed">
-                    Together we achieve more. Collaboration and mutual support drive our success.
-                </p>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Collaboration</h3>
+                <p class="text-slate-500 text-sm">Together we achieve more.</p>
             </div>
-            
-            <!-- Culture Value 3 -->
-            <div class="text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-gradient-to-r from-red-400 to-red-700 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
+
+             <div class="text-center reveal-up stagger-2 group cursor-default">
+                <div class="w-16 h-16 mx-auto bg-pink-100 rounded-2xl flex items-center justify-center text-pink-600 mb-4 group-hover:bg-pink-600 group-hover:text-white transition-all duration-300">
+                    <i data-lucide="book-open" class="w-8 h-8"></i>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Continuous Learning</h3>
-                <p class="text-gray-600 leading-relaxed">
-                    We invest in growth and development, staying ahead of technology trends.
-                </p>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Learning</h3>
+                <p class="text-slate-500 text-sm">Investing in continuous growth.</p>
             </div>
-            
-            <!-- Culture Value 4 -->
-            <div class="text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-gradient-secondary rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-glow">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
+
+             <div class="text-center reveal-up stagger-3 group cursor-default">
+                <div class="w-16 h-16 mx-auto bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                    <i data-lucide="heart-handshake" class="w-8 h-8"></i>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Customer-Centricity</h3>
-                <p class="text-gray-600 leading-relaxed">
-                    Our clients are at the heart of everything we do, ensuring their success is our priority.
-                </p>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Customer Centric</h3>
+                <p class="text-slate-500 text-sm">Your success is our priority.</p>
             </div>
         </div>
     </div>
 </section>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    // About page specific animations
-    document.addEventListener('DOMContentLoaded', function() {
-        // Staggered animation for mission, vision, values cards
-        const foundationCards = document.querySelectorAll('.mission-card, .vision-card, .values-card');
-        foundationCards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.2}s`;
-        });
-        
-        // Team cards animation
-        const teamCards = document.querySelectorAll('.team-card');
-        teamCards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.2}s`;
-        });
-        
-        // Culture values animation
-        const cultureValues = document.querySelectorAll('.animate-on-scroll');
-        cultureValues.forEach((value, index) => {
-            value.style.animationDelay = `${index * 0.1}s`;
-        });
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Parallax effect for floating elements
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const floatingElements = document.querySelectorAll('.floating-element');
-            
-            floatingElements.forEach((element, index) => {
-                const speed = 0.3 + (index * 0.1);
-                element.style.transform = `translate3d(0, ${scrolled * speed}px, 0)`;
-            });
-        });
-    });
-</script>
 {% endblock %}
